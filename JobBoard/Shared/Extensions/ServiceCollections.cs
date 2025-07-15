@@ -10,9 +10,15 @@ public static class ServiceCollections
     public static void AddProjectDependecy(this IServiceCollection services, IConfiguration configuration)
     {
         services.IdentityServices(configuration);
+        services.ApplicationServices();
     }
 
 
+
+    private static void ApplicationServices(this IServiceCollection services)
+    {
+        services.AddScoped<TokenProvider>();
+    }
 
     private static void IdentityServices(this IServiceCollection services, IConfiguration configuration)
     {

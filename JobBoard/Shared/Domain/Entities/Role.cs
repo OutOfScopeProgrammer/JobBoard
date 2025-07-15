@@ -1,4 +1,4 @@
-namespace JobBoard.Shared.Domain;
+namespace JobBoard.Shared.Domain.Entites;
 
 public class Role
 {
