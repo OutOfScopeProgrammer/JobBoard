@@ -1,6 +1,8 @@
 using System.Text;
 using JobBoard.Shared.Auth;
+using JobBoard.Shared.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace JobBoard.Shared.Extensions;
@@ -18,6 +20,7 @@ public static class ServiceCollections
     private static void ApplicationServices(this IServiceCollection services)
     {
         services.AddScoped<TokenProvider>();
+        services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
     }
 
     private static void IdentityServices(this IServiceCollection services, IConfiguration configuration)

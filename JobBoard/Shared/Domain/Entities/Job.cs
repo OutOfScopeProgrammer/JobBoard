@@ -1,4 +1,4 @@
-namespace JobBoard.Shared.Domain.Entites;
+namespace JobBoard.Shared.Domain.Entities;
 
 public class Job
 {

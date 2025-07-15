@@ -1,6 +1,6 @@
 using JobBoard.Shared.Domain.Enums;
 
-namespace JobBoard.Shared.Domain.Entites;
+namespace JobBoard.Shared.Domain.Entities;
 
 public class Application
 {
