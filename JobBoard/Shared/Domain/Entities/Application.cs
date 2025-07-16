@@ -6,6 +6,7 @@ public class Application
 {
     public Guid Id { get; set; }
     public string Description { get; set; } = string.Empty;
+    public Guid ApplicantId { get; set; }
     public Guid JobId { get; set; }
     public Status status { get; set; }
 }

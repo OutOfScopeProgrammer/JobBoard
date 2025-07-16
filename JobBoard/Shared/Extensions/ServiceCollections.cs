@@ -1,8 +1,10 @@
 using System.Text;
 using JobBoard.Shared.Auth;
 using JobBoard.Shared.Domain.Entities;
+using JobBoard.Shared.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace JobBoard.Shared.Extensions;
@@ -13,6 +15,7 @@ public static class ServiceCollections
     {
         services.IdentityServices(configuration);
         services.ApplicationServices();
+        services.ApplicationPersistence(configuration);
     }
 
 
@@ -21,6 +24,17 @@ public static class ServiceCollections
     {
         services.AddScoped<TokenProvider>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+    }
+
+    private static void ApplicationPersistence(this IServiceCollection services, IConfiguration configuration)
+    {
+        var connectionString = configuration.GetConnectionString("Database");
+        if (connectionString is null) throw new Exception("Connection string problem");
+        services.AddDbContext<AppDbContext>(option =>
+        {
+            option.UseNpgsql(connectionString);
+            option.EnableSensitiveDataLogging();
+        });
     }
 
     private static void IdentityServices(this IServiceCollection services, IConfiguration configuration)
