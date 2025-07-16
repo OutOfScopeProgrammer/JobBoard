@@ -17,6 +17,11 @@ public class User
         Name = name;
     }
     public void SetHashedPassword(string hashedPassword) => HashedPassword = hashedPassword;
+    public void SetRole(Role role)
+    {
+        Role = role;
+        RoleId = role.Id;
+    }
 
     public static User Create(string email, string name) => new(email, name);
 

@@ -10,7 +10,7 @@ public class UserConfig : IEntityTypeConfiguration<User>
     {
         builder.HasKey(u => u.Id);
         builder.HasOne(u => u.Role)
-        .WithOne()
-        .HasForeignKey<Role>(r => r.UserId);
+        .WithMany(r => r.Users)
+        .HasForeignKey(u => u.RoleId);
     }
 }

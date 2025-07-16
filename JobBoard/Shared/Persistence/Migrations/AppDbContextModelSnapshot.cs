@@ -86,13 +86,7 @@ namespace JobBoard.Shared.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("Roles");
                 });
@@ -119,6 +113,8 @@ namespace JobBoard.Shared.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -147,13 +143,15 @@ namespace JobBoard.Shared.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("JobBoard.Shared.Domain.Entities.Role", b =>
+            modelBuilder.Entity("JobBoard.Shared.Domain.Entities.User", b =>
                 {
-                    b.HasOne("JobBoard.Shared.Domain.Entities.User", null)
-                        .WithOne("Role")
-                        .HasForeignKey("JobBoard.Shared.Domain.Entities.Role", "UserId")
+                    b.HasOne("JobBoard.Shared.Domain.Entities.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("JobBoard.Shared.Domain.Entities.Job", b =>
@@ -161,10 +159,9 @@ namespace JobBoard.Shared.Persistence.Migrations
                     b.Navigation("Applications");
                 });
 
-            modelBuilder.Entity("JobBoard.Shared.Domain.Entities.User", b =>
+            modelBuilder.Entity("JobBoard.Shared.Domain.Entities.Role", b =>
                 {
-                    b.Navigation("Role")
-                        .IsRequired();
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

@@ -4,5 +4,5 @@ public class Role
 {
     public Guid Id { get; set; }
     public string RoleName { get; set; } = string.Empty;
-    public Guid UserId { get; set; }
+    public List<User> Users { get; set; } = [];
 }
