@@ -32,18 +32,37 @@ public class AuthService(AppDbContext dbContext, TokenProvider tokenProvider, IP
         return Response<AuthResponse>.Success(new(user.Name, token, user.Role.RoleName));
     }
 
-    public async Task<Response<AuthResponse>> Login(string email, string plainPassword)
+    public async Task<Response<AuthResponse>> Login(string email, string password)
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+        var user = await dbContext.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Email == email);
         if (user is null)
             return Response<AuthResponse>.Failure("user or password is wrong");
-        var checkPassword = passwordHasher.VerifyHashedPassword(user, user.HashedPassword, plainPassword);
+        var checkPassword = passwordHasher.VerifyHashedPassword(user, user.HashedPassword, password);
         if (checkPassword == PasswordVerificationResult.Failed)
             return Response<AuthResponse>.Failure("user or password is wrong");
 
         var token = tokenProvider.GenerateJwt(user);
         return Response<AuthResponse>.Success(new(user.Name, token, user.Role.RoleName));
-
     }
 
+
+    public async Task<Response<AuthResponse>> ResetPassword(string email, string oldPassword, string newPassword)
+    {
+        var user = await dbContext.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Email == email);
+        if (user is null)
+            return Response<AuthResponse>.Failure("email or password is wrong");
+
+        var checkOldPassword = passwordHasher.VerifyHashedPassword(user, user.HashedPassword, oldPassword);
+        if (checkOldPassword == PasswordVerificationResult.Failed)
+            return Response<AuthResponse>.Failure("email or password is wrong");
+
+        var newHashedPassword = passwordHasher.HashPassword(user, newPassword);
+        user.SetHashedPassword(newHashedPassword);
+
+        if (await dbContext.SaveChangesAsync() <= 0)
+            return Response<AuthResponse>.Failure("Something went wrong when registering the user");
+
+        var token = tokenProvider.GenerateJwt(user);
+        return Response<AuthResponse>.Success(new(user.Name, token, user.Role.RoleName));
+    }
 }

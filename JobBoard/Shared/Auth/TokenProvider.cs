@@ -7,9 +7,18 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace JobBoard.Shared.Auth;
 
+/// <summary>
+/// A class responsible for token generation
+/// </summary>
+/// <param name="options"> <c>option for jwt token generation</c></param>
 public class TokenProvider(IOptions<JwtSetting> options)
 {
 
+    /// <summary>
+    /// Generate JwtToken
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns>A string represent <c>JwtToken</c></returns>
     public string GenerateJwt(User user)
     {
         var claims = new List<Claim>
