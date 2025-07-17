@@ -1,4 +1,3 @@
-using System;
 using JobBoard.Shared.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

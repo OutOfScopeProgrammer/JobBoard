@@ -1,7 +1,9 @@
+using System.Reflection;
 using System.Text;
 using JobBoard.Shared.Auth;
 using JobBoard.Shared.Domain.Entities;
 using JobBoard.Shared.Persistence;
+using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -39,7 +41,8 @@ public static class ServiceCollections
 
     private static void IdentityServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddOptions<JwtSetting>().Bind<JwtSetting>(config: configuration.GetSection("JwtSetting"));
+        services.AddOptions<JwtSetting>().Bind(config: configuration.GetSection("JwtSetting"));
+        services.AddAuthorization();
         services.AddAuthentication(option =>
         {
             option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -74,9 +77,19 @@ public static class ServiceCollections
             };
 
         });
-        services.AddAuthorization();
+    }
 
-
+    public static void MapApplicationEndpoints(this IEndpointRouteBuilder app)
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        var iEndpoint = typeof(IEndpointMarker);
+        var endpoints = assembly.GetTypes()
+        .Where(t => t is { IsClass: true, IsAbstract: false } & iEndpoint.IsAssignableFrom(t));
+        foreach (var endppoint in endpoints)
+        {
+            var instance = Activator.CreateInstance(endppoint) as IEndpointMarker;
+            instance?.Register(app);
+        }
     }
 
 }
