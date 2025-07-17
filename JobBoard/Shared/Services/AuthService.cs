@@ -15,18 +15,20 @@ public class AuthService(AppDbContext dbContext, TokenProvider tokenProvider, IP
 
     public async Task<Response<AuthResponse>> CreateUser(string email, string name, string password, string roleName)
     {
+        if (await dbContext.Users.AnyAsync(u => u.Email == email))
+            return Response<AuthResponse>.Failure(new Error(ErrorTypes.Conflict, "Email is already used"));
         var user = User.Create(email, name);
         var hashedPassword = passwordHasher.HashPassword(user, password);
         user.SetHashedPassword(hashedPassword);
         var role = await dbContext.Roles.FirstOrDefaultAsync(r => r.RoleName == roleName);
         if (role is null)
-            return Response<AuthResponse>.Failure("Role does not exist");
+            return Response<AuthResponse>.Failure(new Error(ErrorTypes.InvalidRole, "Role does not exist"));
 
         user.SetRole(role);
         dbContext.Add(user);
 
         if (await dbContext.SaveChangesAsync() <= 0)
-            return Response<AuthResponse>.Failure("Something went wrong when registering the user");
+            return Response<AuthResponse>.Failure(new Error(ErrorTypes.Internal, "Something went wrong when registering the user"));
 
         var token = tokenProvider.GenerateJwt(user);
         return Response<AuthResponse>.Success(new(user.Name, token, user.Role.RoleName));
@@ -36,10 +38,10 @@ public class AuthService(AppDbContext dbContext, TokenProvider tokenProvider, IP
     {
         var user = await dbContext.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Email == email);
         if (user is null)
-            return Response<AuthResponse>.Failure("user or password is wrong");
+            return Response<AuthResponse>.Failure(new Error(ErrorTypes.Unauthorized, "user or password is wrong"));
         var checkPassword = passwordHasher.VerifyHashedPassword(user, user.HashedPassword, password);
         if (checkPassword == PasswordVerificationResult.Failed)
-            return Response<AuthResponse>.Failure("user or password is wrong");
+            return Response<AuthResponse>.Failure(new Error(ErrorTypes.Unauthorized, "user or password is wrong"));
 
         var token = tokenProvider.GenerateJwt(user);
         return Response<AuthResponse>.Success(new(user.Name, token, user.Role.RoleName));
@@ -50,17 +52,17 @@ public class AuthService(AppDbContext dbContext, TokenProvider tokenProvider, IP
     {
         var user = await dbContext.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Email == email);
         if (user is null)
-            return Response<AuthResponse>.Failure("email or password is wrong");
+            return Response<AuthResponse>.Failure(new Error(ErrorTypes.Unauthorized, "user or password is wrong"));
 
         var checkOldPassword = passwordHasher.VerifyHashedPassword(user, user.HashedPassword, oldPassword);
         if (checkOldPassword == PasswordVerificationResult.Failed)
-            return Response<AuthResponse>.Failure("email or password is wrong");
+            return Response<AuthResponse>.Failure(new Error(ErrorTypes.Unauthorized, "user or password is wrong"));
 
         var newHashedPassword = passwordHasher.HashPassword(user, newPassword);
         user.SetHashedPassword(newHashedPassword);
 
         if (await dbContext.SaveChangesAsync() <= 0)
-            return Response<AuthResponse>.Failure("Something went wrong when registering the user");
+            return Response<AuthResponse>.Failure(new Error(ErrorTypes.Internal, "Something went wrong when registering the user"));
 
         var token = tokenProvider.GenerateJwt(user);
         return Response<AuthResponse>.Success(new(user.Name, token, user.Role.RoleName));

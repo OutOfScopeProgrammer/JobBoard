@@ -3,6 +3,7 @@ using System.Text;
 using JobBoard.Shared.Auth;
 using JobBoard.Shared.Domain.Entities;
 using JobBoard.Shared.Persistence;
+using JobBoard.Shared.Services;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -26,6 +27,7 @@ public static class ServiceCollections
     {
         services.AddScoped<TokenProvider>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+        services.AddScoped<AuthService>();
     }
 
     private static void ApplicationPersistence(this IServiceCollection services, IConfiguration configuration)

@@ -48,7 +48,7 @@ namespace JobBoard.Shared.Persistence.Migrations
 
                     b.HasIndex("JobId");
 
-                    b.ToTable("Applications");
+                    b.ToTable("Applications", (string)null);
                 });
 
             modelBuilder.Entity("JobBoard.Shared.Domain.Entities.Job", b =>
@@ -73,7 +73,7 @@ namespace JobBoard.Shared.Persistence.Migrations
                     b.HasIndex("EmployeeId")
                         .IsUnique();
 
-                    b.ToTable("Jobs");
+                    b.ToTable("Jobs", (string)null);
                 });
 
             modelBuilder.Entity("JobBoard.Shared.Domain.Entities.Role", b =>
@@ -88,7 +88,7 @@ namespace JobBoard.Shared.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("JobBoard.Shared.Domain.Entities.User", b =>
@@ -116,7 +116,7 @@ namespace JobBoard.Shared.Persistence.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("JobBoard.Shared.Domain.Entities.Application", b =>
