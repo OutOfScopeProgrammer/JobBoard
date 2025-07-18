@@ -20,7 +20,7 @@ public class UserLogin : IEndpointMarker
          if (!response.IsSuccess & response.Errors.FirstOrDefault()!.ErrorType == ErrorTypes.Unauthorized)
              return Results.Unauthorized();
 
-         CookieHelper.SetTokenInCookie(context, response.Data!.AccessToken, jwtSetting.Value);
+         AuthHelper.SetTokenInCookie(context, response.Data!.AccessToken, jwtSetting.Value);
          return Results.Ok(new IdentityResponse(response.Data!.UserName, response.Data.Role));
      })
      .WithTags("Identity")

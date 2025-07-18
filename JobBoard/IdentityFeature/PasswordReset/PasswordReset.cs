@@ -21,11 +21,12 @@ public class PasswordReset : IEndpointMarker
                 var apiResponse = response.Errors.FirstOrDefault()!.ErrorType switch
                 {
                     ErrorTypes.Internal => Results.InternalServerError(response.Errors),
-                    ErrorTypes.Unauthorized => Results.Unauthorized()
+                    ErrorTypes.Unauthorized => Results.Unauthorized(),
+                    _ => Results.InternalServerError(response.Errors)
                 };
                 return apiResponse;
             }
-            CookieHelper.SetTokenInCookie(context, response.Data!.AccessToken, jwtSetting.Value);
+            AuthHelper.SetTokenInCookie(context, response.Data!.AccessToken, jwtSetting.Value);
             return Results.Ok(new IdentityResponse(response.Data.UserName, response.Data.Role));
 
         }).WithTags("Identity")

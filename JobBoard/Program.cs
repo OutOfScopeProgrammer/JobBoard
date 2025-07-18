@@ -12,10 +12,6 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-using var scope = app.Services.CreateScope();
-var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-var loggerFactor = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
-Seeder.Initialize(db, loggerFactor);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

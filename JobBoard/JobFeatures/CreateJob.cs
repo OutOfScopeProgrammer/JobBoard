@@ -1,0 +1,27 @@
+using JobBoard.JobFeatures.Services;
+using JobBoard.Shared.Auth;
+using JobBoard.Shared.Persistence;
+using JobBoard.Shared.Utilities;
+using Microsoft.AspNetCore.Mvc;
+
+namespace JobBoard.JobFeatures;
+
+public record CreateJobDto(string Title, string Description);
+
+public class CreateJob : IEndpointMarker
+{
+    public void Register(IEndpointRouteBuilder app)
+        => app.MapGroup("api")
+        .MapPost("job", async ([FromBody] CreateJobDto dto,
+        HttpContext context, JobService jobService, CancellationToken cancellationToken) =>
+        {
+            var userId = AuthHelper.GetUserId(context);
+            var response = await jobService.CreateJob(dto.Title, dto.Description, userId, cancellationToken);
+            if (!response.IsSuccess & response.Errors.FirstOrDefault()!.ErrorType == ErrorTypes.Internal)
+                return Results.InternalServerError();
+            return Results.Created();
+        })
+        .WithTags("Job")
+        .Produces(StatusCodes.Status201Created)
+        .Produces(StatusCodes.Status500InternalServerError);
+}

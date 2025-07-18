@@ -29,7 +29,7 @@ public class UserRegister : IEndpointMarker
                 };
                 return apiResponse;
             }
-            CookieHelper.SetTokenInCookie(context, response.Data!.AccessToken, jwtSetting.Value);
+            AuthHelper.SetTokenInCookie(context, response.Data!.AccessToken, jwtSetting.Value);
             return Results.Ok(new IdentityResponse(
                 response.Data.UserName,
                 response.Data.Role));

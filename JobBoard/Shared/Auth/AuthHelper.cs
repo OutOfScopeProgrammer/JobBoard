@@ -1,6 +1,8 @@
+using System.Security.Claims;
+
 namespace JobBoard.Shared.Auth;
 
-public static class CookieHelper
+public static class AuthHelper
 {
 
     public static void SetTokenInCookie(HttpContext context, string token, JwtSetting jwtSetting)
@@ -13,5 +15,12 @@ public static class CookieHelper
             Expires = DateTimeOffset.UtcNow.AddMinutes(jwtSetting.ExpirationInMinute)
         };
         context.Response.Cookies.Append("access_token", token, cookieOptions);
+    }
+
+    public static Guid GetUserId(HttpContext context)
+    {
+        var token = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        Guid.TryParse(token, out Guid result);
+        return result;
     }
 }
