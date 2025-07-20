@@ -17,11 +17,12 @@ public class CreateJob : IEndpointMarker
         {
             var userId = AuthHelper.GetUserId(context);
             var response = await jobService.CreateJob(dto.Title, dto.Description, userId, cancellationToken);
-            if (!response.IsSuccess & response.Errors.FirstOrDefault()!.ErrorType == ErrorTypes.Internal)
+            if (!response.IsSuccess)
                 return Results.InternalServerError();
             return Results.Created();
         })
         .WithTags("Job")
+        .RequireAuthorization("EmployeeOnly")
         .Produces(StatusCodes.Status201Created)
         .Produces(StatusCodes.Status500InternalServerError);
 }

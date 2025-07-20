@@ -18,7 +18,7 @@ public class UserRegister : IEndpointMarker
         async ([FromBody] RegisterDto dto, AuthService authService,
                 HttpContext context, IOptions<JwtSetting> jwtSetting) =>
         {
-            var response = await authService.CreateUser(dto.Email, dto.Name, dto.Password, dto.RoleName.ToUpper());
+            var response = await authService.CreateUser(dto.Email, dto.Name, dto.Password, dto.RoleName);
             if (!response.IsSuccess)
             {
                 var apiResponse = response.Errors.FirstOrDefault()?.ErrorType switch

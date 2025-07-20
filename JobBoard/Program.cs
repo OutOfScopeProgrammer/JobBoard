@@ -11,7 +11,10 @@ builder.Services.AddProjectDependecy(builder.Configuration);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
-
+using var scope = app.Services.CreateScope();
+var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
+Seeder.Initialize(db, logger);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

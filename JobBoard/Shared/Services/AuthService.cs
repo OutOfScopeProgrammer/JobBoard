@@ -20,7 +20,7 @@ public class AuthService(AppDbContext dbContext, TokenProvider tokenProvider, IP
         var user = User.Create(email, name);
         var hashedPassword = passwordHasher.HashPassword(user, password);
         user.SetHashedPassword(hashedPassword);
-        var role = await dbContext.Roles.FirstOrDefaultAsync(r => r.RoleName == roleName);
+        var role = await dbContext.Roles.FirstOrDefaultAsync(r => r.RoleName == roleName.ToUpper());
         if (role is null)
             return Response<AuthResponse>.Failure(new Error(ErrorTypes.InvalidRole, "role does not exist"));
 

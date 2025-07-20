@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using JobBoard.JobFeatures.Services;
 using JobBoard.Shared.Auth;
 using JobBoard.Shared.Domain.Entities;
 using JobBoard.Shared.Persistence;
@@ -28,6 +29,8 @@ public static class ServiceCollections
         services.AddScoped<TokenProvider>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddScoped<AuthService>();
+        services.AddScoped<JobService>();
+
     }
 
     private static void ApplicationPersistence(this IServiceCollection services, IConfiguration configuration)
@@ -44,7 +47,13 @@ public static class ServiceCollections
     private static void IdentityServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddOptions<JwtSetting>().Bind(config: configuration.GetSection("JwtSetting"));
-        services.AddAuthorization();
+        services.AddAuthorization(option =>
+        {
+            option.AddPolicy("AdminOnly", policy => policy.RequireRole("ADMIN"));
+            option.AddPolicy("ApplicantOnly", policy => policy.RequireRole("APPLICANT"));
+            option.AddPolicy("EmployeeOnly", policy => policy.RequireRole("EMPLOYEE"));
+
+        });
         services.AddAuthentication(option =>
         {
             option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

@@ -12,5 +12,12 @@ public class UserConfig : IEntityTypeConfiguration<User>
         builder.HasOne(u => u.Role)
         .WithMany(r => r.Users)
         .HasForeignKey(u => u.RoleId);
+        builder.HasMany(u => u.Jobs)
+        .WithOne()
+        .HasForeignKey(j => j.EmployeeId);
+
+        builder.HasMany(u => u.Applications)
+        .WithOne()
+        .HasForeignKey(a => a.ApplicantId);
     }
 }
