@@ -7,7 +7,19 @@ namespace JobBoard.JobFeatures.Services;
 
 public class JobService(AppDbContext dbContext)
 {
-
+    public async Task<Response<List<Job>>> GetJobs(CancellationToken cancellationToken)
+    {
+        var jobs = await dbContext.Jobs.ToListAsync(cancellationToken);
+        if (jobs is null) return Response<List<Job>>.Failure(new Error(ErrorTypes.NotFound, "jobs not found"));
+        return Response<List<Job>>.Success(jobs);
+    }
+    public async Task<Response<Job>> GetJob(Guid jobId, CancellationToken cancellationToken)
+    {
+        var job = await dbContext.Jobs.FirstOrDefaultAsync(j => j.Id == jobId);
+        if (job is null)
+            return Response<Job>.Failure(new Error(ErrorTypes.NotFound, "Job not found"));
+        return Response<Job>.Success(job);
+    }
     public async Task<Response<Guid>> CreateJob(string title, string description, Guid userId, CancellationToken cancellationToken)
     {
         var job = Job.Create(title, description, userId);

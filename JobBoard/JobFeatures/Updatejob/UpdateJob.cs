@@ -9,7 +9,7 @@ public class UpdateJob : IEndpointMarker
 {
     public void Register(IEndpointRouteBuilder app)
      => app.MapGroup("api")
-     .MapPost("job", async ([FromBody] UpdateJobDto dto, JobService jobService, CancellationToken cancellationToken) =>
+     .MapPut("job", async ([FromBody] UpdateJobDto dto, JobService jobService, CancellationToken cancellationToken) =>
      {
          if (Guid.TryParse(dto.JobId, out var jobId))
              return Results.BadRequest("Job id is not valid");
@@ -27,6 +27,7 @@ public class UpdateJob : IEndpointMarker
 
      }).WithTags("Job")
      .RequireAuthorization("Employee")
+     .Produces(StatusCodes.Status400BadRequest)
      .Produces(StatusCodes.Status204NoContent)
      .Produces(StatusCodes.Status500InternalServerError)
      .Produces(StatusCodes.Status404NotFound);
