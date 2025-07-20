@@ -1,10 +1,9 @@
 using JobBoard.JobFeatures.Services;
 using JobBoard.Shared.Auth;
-using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JobBoard.JobFeatures;
+namespace JobBoard.JobFeatures.CreateJob;
 
 public record CreateJobDto(string Title, string Description);
 

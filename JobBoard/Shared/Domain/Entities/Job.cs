@@ -15,6 +15,11 @@ public class Job
         Description = description;
         EmployeeId = employeeId;
     }
+    public void updateJob(string? title, string? description)
+    {
+        Title = title ?? Title;
+        Description = description ?? Description;
+    }
 
 
     public static Job Create(string title, string description, Guid employeeId)

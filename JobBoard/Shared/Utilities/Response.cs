@@ -6,6 +6,7 @@ public record Error(ErrorTypes ErrorType, string ErrorMessage);
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ErrorTypes
 {
+    NotFound,
     InvalidRole,
     Conflict,
     Internal,
