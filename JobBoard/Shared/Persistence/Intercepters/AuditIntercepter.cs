@@ -13,11 +13,11 @@ public class AuditIntercepter : SaveChangesInterceptor
         UpdateTimestamps(eventData.Context);
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
-    public override int SavedChanges(SaveChangesCompletedEventData eventData, int result)
+    public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
         if (eventData.Context is null) throw new Exception("Context is null");
         UpdateTimestamps(eventData.Context);
-        return base.SavedChanges(eventData, result);
+        return base.SavingChanges(eventData, result);
     }
 
 
@@ -28,6 +28,7 @@ public class AuditIntercepter : SaveChangesInterceptor
         var entries = dbContext.ChangeTracker.Entries<Auditable>();
         foreach (var entry in entries)
         {
+            Console.WriteLine($"the entry state: {entry.State}");
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatedAt = DateTime.UtcNow;

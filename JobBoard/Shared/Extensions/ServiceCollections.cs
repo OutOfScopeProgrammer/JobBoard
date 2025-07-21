@@ -10,6 +10,7 @@ using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 
 namespace JobBoard.Shared.Extensions;
@@ -38,12 +39,16 @@ public static class ServiceCollections
     {
         var connectionString = configuration.GetConnectionString("Database");
         if (connectionString is null) throw new Exception("Connection string problem");
-        services.AddDbContext<AppDbContext>(option =>
+        services.AddScoped<IInterceptor, AuditIntercepter>();
+
+        services.AddDbContext<AppDbContext>((provider, option) =>
         {
+            var intercepters = provider.GetServices<IInterceptor>();
+            if (intercepters is null) throw new Exception("interceptors is not configured");
             option.UseNpgsql(connectionString);
             option.EnableSensitiveDataLogging();
+            option.AddInterceptors(intercepters);
         });
-        services.AddScoped<AuditIntercepter>();
 
     }
 
