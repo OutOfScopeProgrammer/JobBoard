@@ -10,6 +10,8 @@ public class User
     public string Name { get; set; } = string.Empty;
     public List<Job>? Jobs { get; set; }
     public List<Application>? Applications { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 
     public Role Role { get; set; } = new();
     public Guid RoleId { get; set; }

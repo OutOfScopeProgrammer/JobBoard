@@ -2,7 +2,8 @@ namespace JobBoard.Shared.Domain.Enums;
 
 public enum Status
 {
-    Available,
-    InProgress,
-    Finished
+    Submitted,
+    UnderReview,
+    Accepted,
+    Rejected
 }
