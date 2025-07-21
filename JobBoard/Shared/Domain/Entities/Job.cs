@@ -1,14 +1,12 @@
 namespace JobBoard.Shared.Domain.Entities;
 
-public class Job
+public class Job : Auditable
 {
     public Guid Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public int Salary { get; set; }
     public List<Application> Applications { get; set; } = [];
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
     public DateTime ClosedAt { get; set; }
 
     public Guid EmployeeId { get; set; }

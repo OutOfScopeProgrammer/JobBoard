@@ -1,9 +1,10 @@
 using JobBoard.Shared.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace JobBoard.Shared.Persistence;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public class AppDbContext(DbContextOptions<AppDbContext> options, IEnumerable<IInterceptor> interceptors) : DbContext(options)
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Job> Jobs { get; set; }
@@ -14,5 +15,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
 
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.AddInterceptors(interceptors);
+        base.OnConfiguring(optionsBuilder);
     }
 }

@@ -12,7 +12,7 @@ public class ApplicationService(AppDbContext dbContext)
     {
         var job = await dbContext.Jobs.FirstOrDefaultAsync(j => j.Id == jobId);
         if (job is null) return false;
-        var application = Application.Create(description, jobId, applicantId, Status.InProgress);
+        var application = Application.Create(description, jobId, applicantId, Status.Submitted);
         job.ApplyToJob(application);
         await dbContext.SaveChangesAsync(cancellationToken);
         return true;

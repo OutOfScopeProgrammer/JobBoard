@@ -4,6 +4,7 @@ using JobBoard.JobFeatures.Services;
 using JobBoard.Shared.Auth;
 using JobBoard.Shared.Domain.Entities;
 using JobBoard.Shared.Persistence;
+using JobBoard.Shared.Persistence.Intercepters;
 using JobBoard.Shared.Services;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -42,6 +43,8 @@ public static class ServiceCollections
             option.UseNpgsql(connectionString);
             option.EnableSensitiveDataLogging();
         });
+        services.AddScoped<AuditIntercepter>();
+
     }
 
     private static void IdentityServices(this IServiceCollection services, IConfiguration configuration)
