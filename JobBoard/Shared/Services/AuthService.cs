@@ -1,5 +1,6 @@
-using JobBoard.Shared.Auth;
-using JobBoard.Shared.Domain.Entities;
+
+using JobBoard.Domain.Entities;
+using JobBoard.Infrastructure.Auth;
 using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Identity;

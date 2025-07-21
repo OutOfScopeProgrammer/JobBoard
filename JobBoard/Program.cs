@@ -1,4 +1,4 @@
-using JobBoard.Shared.Extensions;
+using JobBoard.Infrastructure.Extensions;
 using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Persistence.Seeder;
 using Scalar.AspNetCore;

@@ -1,4 +1,4 @@
-using JobBoard.Shared.Domain.Entities;
+using JobBoard.Domain.Entities;
 using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Utilities;
 using Microsoft.EntityFrameworkCore;
@@ -20,9 +20,9 @@ public class JobService(AppDbContext dbContext)
             return Response<Job>.Failure(new Error(ErrorTypes.NotFound, "Job not found"));
         return Response<Job>.Success(job);
     }
-    public async Task<Response<Guid>> CreateJob(string title, string description, Guid userId, CancellationToken cancellationToken)
+    public async Task<Response<Guid>> CreateJob(string title, string description, int salary, Guid userId, CancellationToken cancellationToken)
     {
-        var job = Job.Create(title, description, userId);
+        var job = Job.Create(title, description, userId, salary);
         dbContext.Jobs.Add(job);
         if (await dbContext.SaveChangesAsync(cancellationToken) <= 0)
             return Response<Guid>.Failure(new Error(ErrorTypes.Internal, "Something went wrong"));
@@ -33,7 +33,7 @@ public class JobService(AppDbContext dbContext)
     {
         var job = await dbContext.Jobs.FirstOrDefaultAsync(j => j.Id == jobId);
         if (job is null) return Response<bool>.Failure(new Error(ErrorTypes.NotFound, "Job not found"));
-        job.updateJob(title, description);
+        job.UpdateJob(title, description);
         if (await dbContext.SaveChangesAsync(cancellationToken) <= 0)
             return Response<bool>.Failure(new Error(ErrorTypes.Internal, "Something went wrong"));
         return Response<bool>.Success();

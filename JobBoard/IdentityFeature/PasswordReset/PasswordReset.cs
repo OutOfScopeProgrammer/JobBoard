@@ -1,5 +1,5 @@
 using JobBoard.IdentityFeature.Dtos;
-using JobBoard.Shared.Auth;
+using JobBoard.Infrastructure.Auth;
 using JobBoard.Shared.Services;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
