@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JobBoard.JobFeatures.GetJob;
 
-public class GetJob : IEndpointMarker
+public class GetJobById : IEndpointMarker
 {
     public void Register(IEndpointRouteBuilder app)
         => app.MapGroup("api")

@@ -1,4 +1,4 @@
-using JobBoard.IdentityFeature.Dtos;
+using JobBoard.IdentityFeatures.Dtos;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Shared.Services;
 using JobBoard.Shared.Utilities;
