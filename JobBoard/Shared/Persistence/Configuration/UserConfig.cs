@@ -21,7 +21,10 @@ public class UserConfig : IEntityTypeConfiguration<User>
         builder.HasMany(u => u.Applications)
         .WithOne()
         .HasForeignKey(a => a.ApplicantId);
-        builder.HasOne<Cv>()
-        .WithOne(c => c.User);
+
+        builder.HasOne(u => u.Cv)
+        .WithOne()
+        .HasForeignKey<Cv>(c => c.UserId);
+
     }
 }

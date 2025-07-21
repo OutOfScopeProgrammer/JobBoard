@@ -1,5 +1,3 @@
-
-using System.Threading.Tasks;
 using JobBoard.Shared.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;

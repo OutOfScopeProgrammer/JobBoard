@@ -1,3 +1,4 @@
+using System.Runtime.ConstrainedExecution;
 using JobBoard.Shared.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -10,6 +11,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options, IEnumerable<II
     public DbSet<Job> Jobs { get; set; }
     public DbSet<Application> Applications { get; set; }
     public DbSet<Role> Roles { get; set; }
+    public DbSet<Cv> Cvs { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
