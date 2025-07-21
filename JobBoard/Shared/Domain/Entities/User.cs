@@ -13,6 +13,8 @@ public class User : Auditable
 
     public Role Role { get; set; } = new();
     public Guid RoleId { get; set; }
+    public Cv Cv { get; set; }
+    public Guid CvId { get; set; }
 
     private User(string email, string name)
     {

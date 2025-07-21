@@ -9,9 +9,11 @@ public class UserConfig : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(u => u.Id);
+
         builder.HasOne(u => u.Role)
         .WithMany(r => r.Users)
         .HasForeignKey(u => u.RoleId);
+
         builder.HasMany(u => u.Jobs)
         .WithOne()
         .HasForeignKey(j => j.EmployeeId);
@@ -19,5 +21,7 @@ public class UserConfig : IEntityTypeConfiguration<User>
         builder.HasMany(u => u.Applications)
         .WithOne()
         .HasForeignKey(a => a.ApplicantId);
+        builder.HasOne<Cv>()
+        .WithOne(c => c.User);
     }
 }
