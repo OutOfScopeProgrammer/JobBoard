@@ -24,10 +24,10 @@ public class JobApplicationService(AppDbContext dbContext)
     }
 
 
-    public async Task<Response<Application>> GetApplicationById(Guid applicationId, Guid jobId, CancellationToken cancellationToken)
+    public async Task<Response<Application>> GetApplicationById(Guid applicationId, CancellationToken cancellationToken)
     {
         var application = await dbContext.Applications
-        .FirstOrDefaultAsync(a => a.Id == applicationId & a.JobId == jobId, cancellationToken);
+        .FirstOrDefaultAsync(a => a.Id == applicationId, cancellationToken);
         return application is null ?
         Response<Application>.Failure(new Error(ErrorTypes.NotFound, "Application not Found")) :
         Response<Application>.Success(application);

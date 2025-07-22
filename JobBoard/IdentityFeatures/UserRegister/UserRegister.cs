@@ -1,5 +1,6 @@
 using JobBoard.IdentityFeatures.Dtos;
 using JobBoard.Infrastructure.Auth;
+using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Services;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +39,7 @@ public class UserRegister : IEndpointMarker
         .Produces<IdentityResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status409Conflict)
         .ProducesProblem(StatusCodes.Status500InternalServerError)
-        .ProducesProblem(StatusCodes.Status400BadRequest);
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .AddEndpointFilter<LogginFilter>();
 
 }

@@ -17,7 +17,7 @@ public class ChangeApplicationStatus : IEndpointMarker
          var response = await service.ChangeApplicationStatus(applicationId, dto.Status, cancellationToken);
          if (!response.IsSuccess)
          {
-             var apiResponse = response.Errors.FirstOrDefault().ErrorType switch
+             var apiResponse = response.Errors.FirstOrDefault()?.ErrorType switch
              {
                  ErrorTypes.NotFound => Results.NotFound(response.Errors),
                  _ => Results.InternalServerError(response.Errors)

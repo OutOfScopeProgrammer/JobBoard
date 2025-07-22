@@ -8,10 +8,10 @@ public class GetApplicationById : IEndpointMarker
 {
     public void Register(IEndpointRouteBuilder app)
         => app.MapGroup("api")
-        .MapGet("applications/{applicationId}", async ([FromRoute] Guid applicationId, [FromRoute] Guid jobId, JobApplicationService service,
+        .MapGet("applications/{applicationId}", async ([FromRoute] Guid applicationId, JobApplicationService service,
          CancellationToken cancellationToken) =>
         {
-            var response = await service.GetApplicationById(applicationId, jobId, cancellationToken);
+            var response = await service.GetApplicationById(applicationId, cancellationToken);
             return response.IsSuccess ?
              Results.Ok(response.Data) :
              Results.NotFound(response.Errors);
