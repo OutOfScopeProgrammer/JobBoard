@@ -3,6 +3,7 @@ using System.Text;
 using JobBoard.Domain.Entities;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Infrastructure.Persistence.Intercepters;
+using JobBoard.JobApplicationFeatures.Services;
 using JobBoard.JobFeatures.Services;
 using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Services;
@@ -32,6 +33,7 @@ public static class ServiceCollections
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddScoped<AuthService>();
         services.AddScoped<JobService>();
+        services.AddScoped<JobApplicationService>();
 
     }
 
