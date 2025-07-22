@@ -1,4 +1,5 @@
 using JobBoard.JobApplicationFeatures.Services;
+using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,5 +22,6 @@ public class GetApplicationsByJobId : IEndpointMarker
         .WithTags("Application")
         .Produces(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound)
+        .AddEndpointFilter<LogginFilter>()
         .RequireAuthorization();
 }

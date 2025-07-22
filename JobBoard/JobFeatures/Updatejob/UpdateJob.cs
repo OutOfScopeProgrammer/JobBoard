@@ -1,4 +1,5 @@
 using JobBoard.JobFeatures.Services;
+using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,5 +31,6 @@ public class UpdateJob : IEndpointMarker
      .Produces(StatusCodes.Status400BadRequest)
      .Produces(StatusCodes.Status204NoContent)
      .Produces(StatusCodes.Status500InternalServerError)
+     .AddEndpointFilter<LogginFilter>()
      .Produces(StatusCodes.Status404NotFound);
 }

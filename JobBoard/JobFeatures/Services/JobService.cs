@@ -10,7 +10,7 @@ public class JobService(AppDbContext dbContext)
     public async Task<Response<List<Job>>> GetJobs(CancellationToken cancellationToken)
     {
         var jobs = await dbContext.Jobs.ToListAsync(cancellationToken);
-        if (jobs is null) return Response<List<Job>>.Failure(new Error(ErrorTypes.NotFound, "jobs not found"));
+        if (jobs.FirstOrDefault() is null) return Response<List<Job>>.Failure(new Error(ErrorTypes.NotFound, "jobs not found"));
         return Response<List<Job>>.Success(jobs);
     }
     public async Task<Response<Job>> GetJob(Guid jobId, CancellationToken cancellationToken)

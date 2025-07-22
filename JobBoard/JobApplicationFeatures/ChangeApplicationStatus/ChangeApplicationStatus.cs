@@ -1,5 +1,6 @@
 using JobBoard.Domain.Enums;
 using JobBoard.JobApplicationFeatures.Services;
+using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,5 +26,6 @@ public class ChangeApplicationStatus : IEndpointMarker
              return apiResponse;
          }
          return Results.NoContent();
-     });
+     })
+     .AddEndpointFilter<LogginFilter>();
 }

@@ -1,4 +1,5 @@
 using JobBoard.JobFeatures.Services;
+using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Utilities;
 
 namespace JobBoard.JobFeatures.GetJobs;
@@ -16,5 +17,6 @@ public class GetJobs : IEndpointMarker
         })
         .WithTags("Job")
         .Produces(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status404NotFound);
+        .Produces(StatusCodes.Status404NotFound)
+        .AddEndpointFilter<LogginFilter>();
 }

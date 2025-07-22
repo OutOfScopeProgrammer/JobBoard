@@ -1,5 +1,6 @@
 using JobBoard.IdentityFeatures.Dtos;
 using JobBoard.Infrastructure.Auth;
+using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Services;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -25,5 +26,6 @@ public class UserLogin : IEndpointMarker
      })
      .WithTags("Identity")
      .Produces<IdentityResponse>(StatusCodes.Status200OK)
-     .Produces(StatusCodes.Status401Unauthorized);
+     .Produces(StatusCodes.Status401Unauthorized)
+     .AddEndpointFilter<LogginFilter>();
 }
