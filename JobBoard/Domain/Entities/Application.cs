@@ -18,7 +18,7 @@ public class Application : Auditable
         Status = status;
     }
 
-
+    public void ChangeStatus(Status status) => Status = status;
     public static Application Create(string description, Guid jobId, Guid applicantId, Status status)
         => new(description, jobId, applicantId, status);
 }

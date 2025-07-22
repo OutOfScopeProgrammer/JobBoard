@@ -3,6 +3,7 @@ using JobBoard.Domain.Enums;
 using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Utilities;
 using Microsoft.EntityFrameworkCore;
+using Npgsql.Internal;
 
 namespace JobBoard.JobApplicationFeatures.Services;
 
@@ -39,6 +40,17 @@ public class JobApplicationService(AppDbContext dbContext)
         return applications is null ?
         Response<List<Application>>.Failure(new Error(ErrorTypes.NotFound, "no application for job")) :
         Response<List<Application>>.Success(applications);
+    }
+
+    public async Task<Response<bool>> ChangeApplicationStatus(Guid applicationId, Status status, CancellationToken cancellationToken)
+    {
+        var application = await dbContext.Applications.FirstOrDefaultAsync(a => a.Id == applicationId, cancellationToken);
+        if (application is null)
+            return Response<bool>.Failure(new Error(ErrorTypes.NotFound, "application not found"));
+        application.ChangeStatus(status);
+        if (await dbContext.SaveChangesAsync(cancellationToken) <= 0)
+            return Response<bool>.Failure(new Error(ErrorTypes.Internal, "internal server error"));
+        return Response<bool>.Success();
     }
 
 }
