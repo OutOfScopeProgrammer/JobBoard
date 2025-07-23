@@ -1,3 +1,4 @@
+using JobBoard.Infrastructure.Auth;
 using JobBoard.JobFeatures.Services;
 using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Utilities;
@@ -27,7 +28,9 @@ public class UpdateJob : IEndpointMarker
          return Results.NoContent();
 
      }).WithTags("Job")
-     .RequireAuthorization("Employee")
+     .WithDescription("بروزرسانی شغل")
+     .WithSummary("Update a job by id")
+     .RequireAuthorization(AuthPolicy.EmployeeOnly)
      .Produces(StatusCodes.Status400BadRequest)
      .Produces(StatusCodes.Status204NoContent)
      .Produces(StatusCodes.Status500InternalServerError)

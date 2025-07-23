@@ -18,13 +18,15 @@ public class UserLogin : IEndpointMarker
       HttpContext context, IOptions<JwtSetting> jwtSetting) =>
      {
          var response = await authServie.Login(dto.Email, dto.Password);
-         if (!response.IsSuccess & response.Errors.FirstOrDefault()!.ErrorType == ErrorTypes.Unauthorized)
+         if (!response.IsSuccess)
              return Results.Unauthorized();
 
          AuthHelper.SetTokenInCookie(context, response.Data!.AccessToken, jwtSetting.Value);
          return Results.Ok(new IdentityResponse(response.Data!.UserName, response.Data.Role));
      })
      .WithTags("Identity")
+     .WithDescription("ورود به حساب کاربری")
+    .WithSummary("User login")
      .Produces<IdentityResponse>(StatusCodes.Status200OK)
      .Produces(StatusCodes.Status401Unauthorized)
      .AddEndpointFilter<LogginFilter>();

@@ -1,4 +1,5 @@
 using JobBoard.Domain.Enums;
+using JobBoard.Infrastructure.Auth;
 using JobBoard.JobApplicationFeatures.Services;
 using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Utilities;
@@ -27,5 +28,9 @@ public class ChangeApplicationStatus : IEndpointMarker
          }
          return Results.NoContent();
      })
+     .WithTags("Application")
+     .WithSummary("Change application status")
+     .WithDescription("تغییر وضعیت رزومه کارجو")
+     .RequireAuthorization(AuthPolicy.EmployeeOnly)
      .AddEndpointFilter<LogginFilter>();
 }

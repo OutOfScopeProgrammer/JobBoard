@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using JobBoard.Infrastructure.Auth;
 using JobBoard.JobApplicationFeatures.Services;
 using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Utilities;
@@ -30,9 +31,11 @@ public class ApplyToJob : IEndpointMarker
         return Results.Created();
     })
     .WithTags("Application")
+    .WithDescription("ارسال رزومه برای آگهی ")
+    .WithSummary("Apply to job")
     .Produces(StatusCodes.Status200OK)
     .Produces(StatusCodes.Status404NotFound)
     .Produces(StatusCodes.Status500InternalServerError)
     .AddEndpointFilter<LogginFilter>()
-    .RequireAuthorization();
+    .RequireAuthorization(AuthPolicy.ApplicantOnly);
 }

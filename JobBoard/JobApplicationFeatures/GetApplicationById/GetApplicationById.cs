@@ -1,3 +1,4 @@
+using JobBoard.Infrastructure.Auth;
 using JobBoard.JobApplicationFeatures.Services;
 using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Utilities;
@@ -18,8 +19,10 @@ public class GetApplicationById : IEndpointMarker
              Results.NotFound(response.Errors);
         })
         .WithTags("Application")
+        .WithDescription("دریافت رزومه با ایدی ")
+        .WithSummary("Get applicaiton by id")
         .Produces(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound)
         .AddEndpointFilter<LogginFilter>()
-        .RequireAuthorization();
+        .RequireAuthorization(AuthPolicy.EmployeeOnly);
 }

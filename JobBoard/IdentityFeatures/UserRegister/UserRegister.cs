@@ -36,6 +36,8 @@ public class UserRegister : IEndpointMarker
                 response.Data.Role));
         })
         .WithTags("Identity")
+        .WithDescription("ایجاد حساب کاربری")
+        .WithSummary("User register")
         .Produces<IdentityResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status409Conflict)
         .ProducesProblem(StatusCodes.Status500InternalServerError)

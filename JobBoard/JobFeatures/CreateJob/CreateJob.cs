@@ -22,7 +22,9 @@ public class CreateJob : IEndpointMarker
             return Results.Created();
         })
         .WithTags("Job")
-        .RequireAuthorization("EmployeeOnly")
+        .WithDescription("ایجاد شغل")
+        .WithSummary("Create a job")
+        .RequireAuthorization(AuthPolicy.EmployeeOnly)
         .Produces(StatusCodes.Status201Created)
         .Produces(StatusCodes.Status500InternalServerError)
         .AddEndpointFilter<LogginFilter>();

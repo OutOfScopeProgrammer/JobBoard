@@ -31,6 +31,8 @@ public class PasswordReset : IEndpointMarker
             return Results.Ok(new IdentityResponse(response.Data.UserName, response.Data.Role));
 
         }).WithTags("Identity")
+        .WithDescription("تغییر رمز عبور")
+        .WithSummary("Password reset")
         .Produces<IdentityResponse>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status500InternalServerError)
         .Produces(StatusCodes.Status401Unauthorized)
