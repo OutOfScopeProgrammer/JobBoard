@@ -36,6 +36,6 @@ public class ApplyToJob : IEndpointMarker
     .Produces(StatusCodes.Status200OK)
     .Produces(StatusCodes.Status404NotFound)
     .Produces(StatusCodes.Status500InternalServerError)
-    .AddEndpointFilter<LogginFilter>()
+    .AddEndpointFilter<LogFilter>()
     .RequireAuthorization(AuthPolicy.ApplicantOnly);
 }

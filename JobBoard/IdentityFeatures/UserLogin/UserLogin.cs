@@ -29,5 +29,5 @@ public class UserLogin : IEndpointMarker
     .WithSummary("User login")
      .Produces<IdentityResponse>(StatusCodes.Status200OK)
      .Produces(StatusCodes.Status401Unauthorized)
-     .AddEndpointFilter<LogginFilter>();
+     .AddEndpointFilter<LogFilter>();
 }

@@ -25,6 +25,6 @@ public class GetApplicationsByJobId : IEndpointMarker
         .WithSummary("Get applications of a job by job id")
         .Produces(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound)
-        .AddEndpointFilter<LogginFilter>()
+        .AddEndpointFilter<LogFilter>()
         .RequireAuthorization(AuthPolicy.EmployeeOnly);
 }

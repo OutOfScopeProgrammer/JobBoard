@@ -27,5 +27,5 @@ public class CreateJob : IEndpointMarker
         .RequireAuthorization(AuthPolicy.EmployeeOnly)
         .Produces(StatusCodes.Status201Created)
         .Produces(StatusCodes.Status500InternalServerError)
-        .AddEndpointFilter<LogginFilter>();
+        .AddEndpointFilter<LogFilter>();
 }

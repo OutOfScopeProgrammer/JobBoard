@@ -2,8 +2,30 @@ using JobBoard.Infrastructure.Extensions;
 using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Persistence.Seeder;
 using Scalar.AspNetCore;
+using Serilog;
+using Serilog.Events;
+using Serilog.Formatting.Compact;
+using Serilog.Sinks.Grafana.Loki;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog(static (context, service, config) =>
+{
+    config.MinimumLevel.Fatal()
+        // all other system logs are disable 
+        .MinimumLevel.Override("Microsoft.AspNetCore.Hosting.Diagnostics", LogEventLevel.Warning)
+        // Only Filters in EndpointFilters directory will be logged with information level
+        .MinimumLevel.Override("JobBoard.Shared.EndpointFilters", LogEventLevel.Information)
+        .WriteTo.Console()
+        .WriteTo.GrafanaLoki(
+           "http://localhost:3100",
+            labels: [new LokiLabel() { Key = "App", Value = "LokiSerilogDemo" }],
+            textFormatter: new RenderedCompactJsonFormatter()
+           );
+});
+
 builder.Services.AddProjectDependecy(builder.Configuration);
 
 // Add services to the container.
@@ -23,6 +45,10 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 
 }
+// app.UseSerilogRequestLogging(opts =>
+// {
+//     opts.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+// });
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

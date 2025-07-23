@@ -5,9 +5,7 @@ using JobBoard.Shared.Services;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-
 namespace JobBoard.Identity.UserRegister;
-
 
 public record RegisterDto(string Email, string Name, string Password, string RoleName);
 
@@ -38,10 +36,10 @@ public class UserRegister : IEndpointMarker
         .WithTags("Identity")
         .WithDescription("ایجاد حساب کاربری")
         .WithSummary("User register")
+        .AddEndpointFilter<LogFilter>()
         .Produces<IdentityResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status409Conflict)
         .ProducesProblem(StatusCodes.Status500InternalServerError)
-        .ProducesProblem(StatusCodes.Status400BadRequest)
-        .AddEndpointFilter<LogginFilter>();
+        .ProducesProblem(StatusCodes.Status400BadRequest);
 
 }
