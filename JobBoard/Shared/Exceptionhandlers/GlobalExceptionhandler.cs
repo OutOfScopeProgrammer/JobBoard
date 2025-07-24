@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Diagnostics;
 
-namespace JobBoard.Shared.Exceptionhandlers;
+namespace JobBoard.Shared.ExceptionHandlers;
 
 public static class GlobalExceptionhandler
 {
@@ -14,9 +14,8 @@ public static class GlobalExceptionhandler
                 var exception = exceptionHandlerFeature?.Error;
                 var loggerFactory = context.RequestServices.GetRequiredService<ILoggerFactory>();
                 var logger = loggerFactory.CreateLogger("GlobalExceptionHandler");
-                logger.LogInformation(exception?.Message);
+                logger.LogError(exception?.Message);
                 await context.Response.WriteAsJsonAsync(new { error = "internal server error" });
             })
         );
-
 }

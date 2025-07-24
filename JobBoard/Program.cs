@@ -1,5 +1,5 @@
 using JobBoard.Infrastructure.Extensions;
-using JobBoard.Shared.Exceptionhandlers;
+using JobBoard.Shared.ExceptionHandlers;
 using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Persistence.Seeder;
 using Scalar.AspNetCore;
@@ -12,13 +12,15 @@ using Serilog.Sinks.Grafana.Loki;
 
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.UseSerilog(static (context, service, config) =>
+builder.Host.UseSerilog(static (context, config) =>
 {
     config.MinimumLevel.Fatal()
         // all other system logs are disable 
         .MinimumLevel.Override("Microsoft.AspNetCore.Hosting.Diagnostics", LogEventLevel.Warning)
-        // Only Filters in EndpointFilters directory will be logged with information level
+        // Only Filters in theese directory will be logged with information level
         .MinimumLevel.Override("JobBoard.Shared.EndpointFilters", LogEventLevel.Information)
+        .MinimumLevel.Override("GlobalExceptionHandler", LogEventLevel.Information)
+
         .WriteTo.Console()
         .WriteTo.GrafanaLoki(
            "http://localhost:3100",
@@ -35,8 +37,8 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 using var scope = app.Services.CreateScope();
-app.UseGlobalExceptionhandler();
 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+app.UseGlobalExceptionhandler();
 var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
 Seeder.Initialize(db, logger);
 
