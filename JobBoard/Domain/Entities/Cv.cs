@@ -6,8 +6,8 @@ public class Cv : Auditable
     public string FullName { get; set; } = string.Empty;
     public string FullAddress { get; set; } = string.Empty;
     public string City { get; set; } = string.Empty;
-    public int Salary { get; set; }
-
+    public int ExpectedSalary { get; set; }
+    public string? ImageUrl { get; set; }
 
     public Guid UserId { get; set; }
 }

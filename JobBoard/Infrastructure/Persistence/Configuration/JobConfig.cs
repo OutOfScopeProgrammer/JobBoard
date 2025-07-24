@@ -15,5 +15,9 @@ public class JobConfig : IEntityTypeConfiguration<Job>
 
         builder.HasMany(j => j.Applications).WithOne().HasForeignKey(a => a.JobId);
 
+        builder.Property(j => j.Description).HasMaxLength(200).IsRequired();
+        builder.Property(j => j.Title).HasMaxLength(100).IsRequired();
+        builder.Property(j => j.Salary).IsRequired();
+
     }
 }

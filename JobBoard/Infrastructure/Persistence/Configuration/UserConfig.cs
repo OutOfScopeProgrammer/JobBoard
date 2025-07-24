@@ -27,5 +27,6 @@ public class UserConfig : IEntityTypeConfiguration<User>
         .WithOne()
         .HasForeignKey<Cv>(c => c.UserId);
 
+        builder.Property(u => u.Name).HasMaxLength(70);
     }
 }
