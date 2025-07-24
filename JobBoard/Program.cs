@@ -1,4 +1,5 @@
 using JobBoard.Infrastructure.Extensions;
+using JobBoard.Shared.Exceptionhandlers;
 using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Persistence.Seeder;
 using Scalar.AspNetCore;
@@ -34,6 +35,7 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 using var scope = app.Services.CreateScope();
+app.UseGlobalExceptionhandler();
 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
 Seeder.Initialize(db, logger);
@@ -45,10 +47,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 
 }
-// app.UseSerilogRequestLogging(opts =>
-// {
-//     opts.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
-// });
+
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

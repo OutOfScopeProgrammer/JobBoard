@@ -1,5 +1,7 @@
 using System.Reflection;
 using System.Text;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using JobBoard.Domain.Entities;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Infrastructure.Persistence.Intercepters;
@@ -34,7 +36,7 @@ public static class ServiceCollections
         services.AddScoped<AuthService>();
         services.AddScoped<JobService>();
         services.AddScoped<JobApplicationService>();
-
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
     private static void ApplicationPersistence(this IServiceCollection services, IConfiguration configuration)
@@ -59,9 +61,9 @@ public static class ServiceCollections
         services.AddOptions<JwtSetting>().Bind(config: configuration.GetSection("JwtSetting"));
         services.AddAuthorization(option =>
         {
-            option.AddPolicy("AdminOnly", policy => policy.RequireRole("ADMIN"));
-            option.AddPolicy("ApplicantOnly", policy => policy.RequireRole("APPLICANT"));
-            option.AddPolicy("EmployeeOnly", policy => policy.RequireRole("EMPLOYEE"));
+            option.AddPolicy(AuthPolicy.AdminOnly, policy => policy.RequireRole(ApplicationRoles.ADMIN.ToString()));
+            option.AddPolicy(AuthPolicy.ApplicantOnly, policy => policy.RequireRole(ApplicationRoles.APPLICANT.ToString()));
+            option.AddPolicy(AuthPolicy.EmployeeOnly, policy => policy.RequireRole(ApplicationRoles.EMPLOYEE.ToString()));
 
         });
         services.AddAuthentication(option =>

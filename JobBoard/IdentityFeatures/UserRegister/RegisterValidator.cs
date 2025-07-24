@@ -1,6 +1,8 @@
-using System.Linq;
+using System.ComponentModel;
 using FluentValidation;
+using JobBoard.Domain.Entities;
 using JobBoard.Identity.UserRegister;
+using JobBoard.Infrastructure.Auth;
 
 namespace JobBoard.IdentityFeatures.UserRegister;
 
@@ -21,6 +23,12 @@ public class RegisterValidator : AbstractValidator<RegisterDto>
             .Must(ContainsUppercase).WithMessage("password must contain at least one uppercase letter.")
             .Must(ContainsDigit).WithMessage("password must contain at least one digit.")
             .Must(ContainLowercase).WithMessage("password must contain at least one lowercase character.");
+
+        _ = RuleFor(r => r.RoleName)
+            .Must(RoleName => RoleName.ToUpper() == ApplicationRoles.ADMIN.ToString()
+                    || RoleName.ToUpper() == ApplicationRoles.EMPLOYEE.ToString()
+                    || RoleName.ToUpper() == ApplicationRoles.APPLICANT.ToString())
+                    .WithMessage("role is invalid.");
     }
 
 

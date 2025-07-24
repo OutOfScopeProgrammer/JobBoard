@@ -1,4 +1,3 @@
-using System;
 using FluentValidation;
 
 namespace JobBoard.JobFeatures.CreateJob;

@@ -1,3 +1,4 @@
+using FluentValidation;
 using JobBoard.IdentityFeatures.Dtos;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Shared.EndpointFilters;
@@ -37,6 +38,7 @@ public class UserRegister : IEndpointMarker
         .WithDescription("ایجاد حساب کاربری")
         .WithSummary("User register")
         .AddEndpointFilter<LogFilter>()
+        .AddEndpointFilter<ValidationFilter<RegisterDto>>()
         .Produces<IdentityResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status409Conflict)
         .ProducesProblem(StatusCodes.Status500InternalServerError)

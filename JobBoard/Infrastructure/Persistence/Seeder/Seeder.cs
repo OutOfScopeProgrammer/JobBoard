@@ -1,4 +1,5 @@
 using JobBoard.Domain.Entities;
+using JobBoard.Infrastructure.Auth;
 using Microsoft.EntityFrameworkCore;
 
 namespace JobBoard.Shared.Persistence.Seeder;
@@ -15,9 +16,9 @@ public static class Seeder
         {
             logger.LogInformation("Seeding ....");
 
-            var admin = new Role { Id = Guid.NewGuid(), RoleName = "ADMIN" };
-            var applicant = new Role { Id = Guid.NewGuid(), RoleName = "APPLICANT" };
-            var employee = new Role { Id = Guid.NewGuid(), RoleName = "EMPLOYEE" };
+            var admin = new Role { Id = Guid.NewGuid(), RoleName = ApplicationRoles.ADMIN.ToString() };
+            var applicant = new Role { Id = Guid.NewGuid(), RoleName = ApplicationRoles.APPLICANT.ToString() };
+            var employee = new Role { Id = Guid.NewGuid(), RoleName = ApplicationRoles.EMPLOYEE.ToString() };
             dbContext.AddRange(admin, applicant, employee);
             dbContext.SaveChanges();
             logger.LogInformation("Seeding Finished");
