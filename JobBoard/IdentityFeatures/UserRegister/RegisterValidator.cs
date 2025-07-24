@@ -1,6 +1,4 @@
-using System.ComponentModel;
 using FluentValidation;
-using JobBoard.Domain.Entities;
 using JobBoard.Identity.UserRegister;
 using JobBoard.Infrastructure.Auth;
 

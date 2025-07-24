@@ -1,4 +1,3 @@
-using FluentValidation;
 using JobBoard.IdentityFeatures.Dtos;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Shared.EndpointFilters;

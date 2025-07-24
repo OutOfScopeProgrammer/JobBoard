@@ -1,7 +1,6 @@
 using System.Reflection;
 using System.Text;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using JobBoard.Domain.Entities;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Infrastructure.Persistence.Intercepters;
