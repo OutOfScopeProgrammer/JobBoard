@@ -5,9 +5,11 @@ using JobBoard.CvFeatures.Services;
 using JobBoard.Domain.Entities;
 using JobBoard.IdentityFeatures.Services;
 using JobBoard.Infrastructure.Auth;
+using JobBoard.Infrastructure.Logger.Middlewares;
 using JobBoard.Infrastructure.Persistence.Intercepters;
 using JobBoard.JobApplicationFeatures.Services;
 using JobBoard.JobFeatures.Services;
+using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -38,6 +40,7 @@ public static class ServiceCollections
         services.AddScoped<JobApplicationService>();
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         services.AddScoped<CvService>();
+        services.AddScoped<LogMiddleware>();
     }
 
     private static void ApplicationPersistence(this IServiceCollection services, IConfiguration configuration)

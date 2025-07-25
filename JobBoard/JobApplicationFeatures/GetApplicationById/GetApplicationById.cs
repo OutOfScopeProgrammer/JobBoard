@@ -23,6 +23,5 @@ public class GetApplicationById : IEndpointMarker
         .WithSummary("Get applicaiton by id")
         .Produces(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound)
-        .AddEndpointFilter<LogFilter>()
         .RequireAuthorization(AuthPolicy.EmployeeOnly);
 }

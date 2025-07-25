@@ -31,6 +31,5 @@ public class ChangeApplicationStatus : IEndpointMarker
      .WithTags("Application")
      .WithSummary("Change application status")
      .WithDescription("تغییر وضعیت رزومه کارجو")
-     .RequireAuthorization(AuthPolicy.EmployeeOnly)
-     .AddEndpointFilter<LogFilter>();
+     .RequireAuthorization(AuthPolicy.EmployeeOnly);
 }

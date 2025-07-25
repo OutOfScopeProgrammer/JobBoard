@@ -39,7 +39,6 @@ public class UserRegister : IEndpointMarker
         .WithTags("Identity")
         .WithDescription("ایجاد حساب کاربری")
         .WithSummary("User register")
-        .AddEndpointFilter<LogFilter>()
         .AddEndpointFilter<ValidationFilter<RegisterDto>>()
         .Produces<IdentityResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status409Conflict)

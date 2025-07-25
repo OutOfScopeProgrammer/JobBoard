@@ -35,6 +35,5 @@ public class PasswordReset : IEndpointMarker
         .WithSummary("Password reset")
         .Produces<IdentityResponse>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status500InternalServerError)
-        .Produces(StatusCodes.Status401Unauthorized)
-        .AddEndpointFilter<LogFilter>();
+        .Produces(StatusCodes.Status401Unauthorized);
 }

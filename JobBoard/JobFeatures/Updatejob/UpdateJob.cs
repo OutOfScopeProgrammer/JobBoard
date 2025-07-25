@@ -34,6 +34,5 @@ public class UpdateJob : IEndpointMarker
      .Produces(StatusCodes.Status400BadRequest)
      .Produces(StatusCodes.Status204NoContent)
      .Produces(StatusCodes.Status500InternalServerError)
-     .AddEndpointFilter<LogFilter>()
      .Produces(StatusCodes.Status404NotFound);
 }

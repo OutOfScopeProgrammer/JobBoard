@@ -26,8 +26,7 @@ public class UserLogin : IEndpointMarker
      })
      .WithTags("Identity")
      .WithDescription("ورود به حساب کاربری")
-    .WithSummary("User login")
+     .WithSummary("User login")
      .Produces<IdentityResponse>(StatusCodes.Status200OK)
-     .Produces(StatusCodes.Status401Unauthorized)
-     .AddEndpointFilter<LogFilter>();
+     .Produces(StatusCodes.Status401Unauthorized);
 }

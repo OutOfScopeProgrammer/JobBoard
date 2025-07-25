@@ -15,7 +15,7 @@ public static class SerilogExtension
                 // all other system logs are disable 
                 .MinimumLevel.Override("Microsoft.AspNetCore.Hosting.Diagnostics", LogEventLevel.Warning)
                 // Only Filters in theese directory will be logged with information level
-                .MinimumLevel.Override("JobBoard.Shared.EndpointFilters", LogEventLevel.Information)
+                .MinimumLevel.Override("JobBoard.Infrastructure.Logger.Middlewares", LogEventLevel.Information)
                 .MinimumLevel.Override("GlobalExceptionHandler", LogEventLevel.Information)
 
                 .WriteTo.Console()

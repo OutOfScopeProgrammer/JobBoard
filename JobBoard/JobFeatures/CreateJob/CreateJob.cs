@@ -24,8 +24,8 @@ public class CreateJob : IEndpointMarker
         .WithTags("Job")
         .WithDescription("ایجاد شغل")
         .WithSummary("Create a job")
+        .AddEndpointFilter<ValidationFilter<CreateJobDto>>()
         .RequireAuthorization(AuthPolicy.EmployeeOnly)
         .Produces(StatusCodes.Status201Created)
-        .Produces(StatusCodes.Status500InternalServerError)
-        .AddEndpointFilter<LogFilter>();
+        .Produces(StatusCodes.Status500InternalServerError);
 }

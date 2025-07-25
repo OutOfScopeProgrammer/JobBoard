@@ -19,6 +19,5 @@ public class GetJobById : IEndpointMarker
         .WithDescription("دریافت شغل با ایدی")
         .WithSummary("Get a job by id")
         .Produces(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status404NotFound)
-        .AddEndpointFilter<LogFilter>();
+        .Produces(StatusCodes.Status404NotFound);
 }

@@ -19,6 +19,5 @@ public class GetJobs : IEndpointMarker
         .WithDescription("دریافت شغل ها")
         .WithSummary("Get all jobs")
         .Produces(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status404NotFound)
-        .AddEndpointFilter<LogFilter>();
+        .Produces(StatusCodes.Status404NotFound);
 }

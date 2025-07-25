@@ -1,8 +1,10 @@
 using JobBoard.Infrastructure.Extensions;
+using JobBoard.Infrastructure.Logger.Middlewares;
 using JobBoard.Shared.ExceptionHandlers;
 using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Persistence.Seeder;
 using Scalar.AspNetCore;
+using Serilog;
 
 
 
@@ -18,8 +20,7 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 app.UseGlobalExceptionhandler();
-
-
+app.UseMiddleware<LogMiddleware>();
 
 using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
