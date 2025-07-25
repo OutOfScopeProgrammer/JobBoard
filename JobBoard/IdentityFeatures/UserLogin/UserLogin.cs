@@ -1,7 +1,7 @@
 using JobBoard.IdentityFeatures.Dtos;
+using JobBoard.IdentityFeatures.Services;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Shared.EndpointFilters;
-using JobBoard.Shared.Services;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -14,7 +14,7 @@ public class UserLogin : IEndpointMarker
 {
     public void Register(IEndpointRouteBuilder app)
      => app.MapGroup("api/indentity")
-     .MapPost("login", async ([FromBody] LoginDto dto, AuthService authServie,
+     .MapPost("login", async ([FromBody] LoginDto dto, IdentityService authServie,
       HttpContext context, IOptions<JwtSetting> jwtSetting) =>
      {
          var response = await authServie.Login(dto.Email, dto.Password);

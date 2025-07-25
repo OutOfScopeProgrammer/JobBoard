@@ -1,7 +1,7 @@
 using JobBoard.IdentityFeatures.Dtos;
+using JobBoard.IdentityFeatures.Services;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Shared.EndpointFilters;
-using JobBoard.Shared.Services;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -13,7 +13,7 @@ public class PasswordReset : IEndpointMarker
 {
     public void Register(IEndpointRouteBuilder app)
         => app.MapGroup("api/identity")
-        .MapPost("reset", async ([FromBody] ResetDto dto, AuthService authService,
+        .MapPost("reset", async ([FromBody] ResetDto dto, IdentityService authService,
          HttpContext context, IOptions<JwtSetting> jwtSetting) =>
         {
             var response = await authService.ResetPassword(dto.Email, dto.OldPassword, dto.NewPassword);

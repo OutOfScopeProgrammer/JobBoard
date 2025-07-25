@@ -6,12 +6,12 @@ using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace JobBoard.Shared.Services;
+namespace JobBoard.IdentityFeatures.Services;
 
 public record AuthResponse(string UserName, string AccessToken, string Role);
 
 
-public class AuthService(AppDbContext dbContext, TokenProvider tokenProvider, IPasswordHasher<User> passwordHasher)
+public class IdentityService(AppDbContext dbContext, TokenProvider tokenProvider, IPasswordHasher<User> passwordHasher)
 {
 
     public async Task<Response<AuthResponse>> CreateUser(string email, string name, string password, string roleName)

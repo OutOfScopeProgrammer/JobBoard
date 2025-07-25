@@ -1,7 +1,7 @@
 using JobBoard.IdentityFeatures.Dtos;
+using JobBoard.IdentityFeatures.Services;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Shared.EndpointFilters;
-using JobBoard.Shared.Services;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -14,18 +14,21 @@ public class UserRegister : IEndpointMarker
     public void Register(IEndpointRouteBuilder app)
         => app.MapGroup("api/identity")
         .MapPost("register",
-        async ([FromBody] RegisterDto dto, AuthService authService,
+        async ([FromBody] RegisterDto dto, IdentityService authService,
                 HttpContext context, IOptions<JwtSetting> jwtSetting) =>
         {
             var response = await authService.CreateUser(dto.Email, dto.Name, dto.Password, dto.RoleName);
             if (!response.IsSuccess)
             {
+
                 var apiResponse = response.Errors.FirstOrDefault()?.ErrorType switch
+
                 {
                     ErrorTypes.Conflict => Results.Conflict(response.Errors),
                     ErrorTypes.Internal => Results.InternalServerError(response.Errors),
                     _ => Results.BadRequest(response.Errors)
-                };
+                }
+                ;
                 return apiResponse;
             }
             AuthHelper.SetTokenInCookie(context, response.Data!.AccessToken, jwtSetting.Value);

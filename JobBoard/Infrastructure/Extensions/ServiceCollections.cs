@@ -1,13 +1,14 @@
 using System.Reflection;
 using System.Text;
 using FluentValidation;
+using JobBoard.CvFeatures.Services;
 using JobBoard.Domain.Entities;
+using JobBoard.IdentityFeatures.Services;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Infrastructure.Persistence.Intercepters;
 using JobBoard.JobApplicationFeatures.Services;
 using JobBoard.JobFeatures.Services;
 using JobBoard.Shared.Persistence;
-using JobBoard.Shared.Services;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -32,10 +33,11 @@ public static class ServiceCollections
     {
         services.AddScoped<TokenProvider>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-        services.AddScoped<AuthService>();
+        services.AddScoped<IdentityService>();
         services.AddScoped<JobService>();
         services.AddScoped<JobApplicationService>();
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddScoped<CvService>();
     }
 
     private static void ApplicationPersistence(this IServiceCollection services, IConfiguration configuration)
@@ -58,6 +60,7 @@ public static class ServiceCollections
     private static void IdentityServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddOptions<JwtSetting>().Bind(config: configuration.GetSection("JwtSetting"));
+        services.AddAntiforgery(option => option.HeaderName = "X-CSRF-TOKEN");
         services.AddAuthorization(option =>
         {
             option.AddPolicy(AuthPolicy.AdminOnly, policy => policy.RequireRole(ApplicationRoles.ADMIN.ToString()));
