@@ -15,8 +15,9 @@ public class CreateCv : IEndpointMarker
         .MapPost("cv", async ([FromForm] CreateCvDto dto, CvService cvService, HttpContext context) =>
         {
             var contentType = context.Request.ContentType;
-            if (!contentType.Contains("multipart/form-data"))
+            if (!contentType!.Contains("multipart/form-data"))
                 return Results.BadRequest("content-type must be multipart/form-data");
+
             var userId = AuthHelper.GetUserId(context);
             var response = await cvService.CreateCv(dto.FullName, dto.FullAddress, dto.City, dto.ExpectedSalary, dto.Image, userId);
             return response.IsSuccess ?

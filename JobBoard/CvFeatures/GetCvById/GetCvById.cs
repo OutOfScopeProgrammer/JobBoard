@@ -10,10 +10,14 @@ public class GetCvById : IEndpointMarker
         .MapGet("cv/{userId:guid}", async (Guid userId, CvService cvService, HttpContext context) =>
         {
             var response = await cvService.GetCvById(userId);
-            var imageName = Path.GetFileName(response.Data.ImageUrl);
+            if (!response.IsSuccess)
+                return Results.BadRequest(response.Errors);
+
+            var imageName = Path.GetFileName(response.Data!.ImageUrl);
             var baseUrl = $"{context.Request.Scheme}://{context.Request.Host}";
             var imageUrl = $"{baseUrl}/api/images/cv/{imageName}";
             response.Data.ImageUrl = imageUrl;
-            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response.Errors);
+
+            return Results.Ok(response);
         });
 }

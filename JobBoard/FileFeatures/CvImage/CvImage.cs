@@ -9,7 +9,9 @@ public class CvImage : IEndpointMarker
         .MapGet("cv/{imageName}", async (string imageName, IWebHostEnvironment env) =>
         {
             var path = Path.Combine(env.WebRootPath, "cvImages", imageName);
-            var image = File.ReadAllBytes(path);
-            return Results.File(image, "image/png");
+            var imageExtension = Path.GetExtension(path);
+            _ = imageExtension.Replace('.', '/');
+            var image = await File.ReadAllBytesAsync(path);
+            return Results.File(image, $"image{imageExtension}");
         });
 }
