@@ -10,7 +10,7 @@ namespace JobBoard.UserFeature.ApplyToJob;
 public record ApplyToJobDto(string Description, Guid JobId);
 public class ApplyToJob : IEndpointMarker
 {
-    public void Register(IEndpointRouteBuilder app)
+    public RouteHandlerBuilder Register(IEndpointRouteBuilder app)
      => app.MapGroup("api")
      .MapGroup("job")
      .MapPost("application", async ([FromBody] ApplyToJobDto dto,

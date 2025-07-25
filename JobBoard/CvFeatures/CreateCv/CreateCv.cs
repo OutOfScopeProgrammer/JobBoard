@@ -9,7 +9,7 @@ namespace JobBoard.CvFeatures.CreateCv;
 public record CreateCvDto(string FullName, string? FullAddress, string City, int ExpectedSalary, IFormFile Image);
 public class CreateCv : IEndpointMarker
 {
-    public void Register(IEndpointRouteBuilder app)
+    public RouteHandlerBuilder Register(IEndpointRouteBuilder app)
         => app.MapGroup("api")
         .MapPost("cv", async ([FromForm] CreateCvDto dto, CvService cvService, HttpContext context) =>
         {
@@ -18,5 +18,5 @@ public class CreateCv : IEndpointMarker
             return response.IsSuccess ?
             Results.Created() :
             Results.BadRequest(response.Errors);
-        });
+        }).RequireAuthorization(AuthPolicy.ApplicantOnly);
 }

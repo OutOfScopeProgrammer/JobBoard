@@ -7,7 +7,7 @@ namespace JobBoard.JobFeatures.GetJob;
 
 public class GetJobById : IEndpointMarker
 {
-    public void Register(IEndpointRouteBuilder app)
+    public RouteHandlerBuilder Register(IEndpointRouteBuilder app)
         => app.MapGroup("api")
         .MapGet("job/{id:guid}", async ([FromRoute] Guid id, JobService jobService, CancellationToken cancellationToken) =>
         {

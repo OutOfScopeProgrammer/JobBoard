@@ -5,7 +5,7 @@ namespace JobBoard.CvFeatures.GetCvById;
 
 public class GetCvById : IEndpointMarker
 {
-    public void Register(IEndpointRouteBuilder app)
+    public RouteHandlerBuilder Register(IEndpointRouteBuilder app)
         => app.MapGroup("api")
         .MapGet("cv/{userId:guid}", async (Guid userId, CvService cvService, HttpContext context) =>
         {

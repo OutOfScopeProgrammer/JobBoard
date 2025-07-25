@@ -60,7 +60,6 @@ public static class ServiceCollections
     private static void IdentityServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddOptions<JwtSetting>().Bind(config: configuration.GetSection("JwtSetting"));
-        services.AddAntiforgery(option => option.HeaderName = "X-CSRF-TOKEN");
         services.AddAuthorization(option =>
         {
             option.AddPolicy(AuthPolicy.AdminOnly, policy => policy.RequireRole(ApplicationRoles.ADMIN.ToString()));
@@ -113,7 +112,8 @@ public static class ServiceCollections
         foreach (var endppoint in endpoints)
         {
             var instance = Activator.CreateInstance(endppoint) as IEndpointMarker;
-            instance?.Register(app);
+            var routBuilder = instance?.Register(app);
+            routBuilder?.DisableAntiforgery();
         }
     }
 

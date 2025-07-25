@@ -11,7 +11,7 @@ public record RegisterDto(string Email, string Name, string Password, string Rol
 
 public class UserRegister : IEndpointMarker
 {
-    public void Register(IEndpointRouteBuilder app)
+    public RouteHandlerBuilder Register(IEndpointRouteBuilder app)
         => app.MapGroup("api/identity")
         .MapPost("register",
         async ([FromBody] RegisterDto dto, IdentityService authService,

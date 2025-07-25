@@ -8,7 +8,7 @@ namespace JobBoard.JobApplicationFeatures.GetApplication;
 
 public class GetApplicationById : IEndpointMarker
 {
-    public void Register(IEndpointRouteBuilder app)
+    public RouteHandlerBuilder Register(IEndpointRouteBuilder app)
         => app.MapGroup("api")
         .MapGet("applications/{applicationId}", async ([FromRoute] Guid applicationId, JobApplicationService service,
          CancellationToken cancellationToken) =>

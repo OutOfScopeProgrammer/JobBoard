@@ -11,7 +11,7 @@ namespace JobBoard.IdentityFeature.PasswordReset;
 public record ResetDto(string Email, string OldPassword, string NewPassword);
 public class PasswordReset : IEndpointMarker
 {
-    public void Register(IEndpointRouteBuilder app)
+    public RouteHandlerBuilder Register(IEndpointRouteBuilder app)
         => app.MapGroup("api/identity")
         .MapPost("reset", async ([FromBody] ResetDto dto, IdentityService authService,
          HttpContext context, IOptions<JwtSetting> jwtSetting) =>

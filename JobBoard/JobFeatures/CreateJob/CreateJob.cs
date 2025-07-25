@@ -10,7 +10,7 @@ public record CreateJobDto(string Title, string Description, int Salary);
 
 public class CreateJob : IEndpointMarker
 {
-    public void Register(IEndpointRouteBuilder app)
+    public RouteHandlerBuilder Register(IEndpointRouteBuilder app)
         => app.MapGroup("api")
         .MapPost("job", async ([FromBody] CreateJobDto dto,
         HttpContext context, JobService jobService, CancellationToken cancellationToken) =>

@@ -9,7 +9,7 @@ namespace JobBoard.JobFeatures.Updatejob;
 public record UpdateJobDto(string? Title, string? Description, string JobId);
 public class UpdateJob : IEndpointMarker
 {
-    public void Register(IEndpointRouteBuilder app)
+    public RouteHandlerBuilder Register(IEndpointRouteBuilder app)
      => app.MapGroup("api")
      .MapPut("job", async ([FromBody] UpdateJobDto dto, JobService jobService, CancellationToken cancellationToken) =>
      {

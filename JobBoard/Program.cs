@@ -17,9 +17,12 @@ builder.Services.AddProjectDependecy(builder.Configuration);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+app.UseGlobalExceptionhandler();
+
+
+
 using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-app.UseGlobalExceptionhandler();
 var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
 Seeder.Initialize(db, logger);
 
@@ -35,7 +38,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseAntiforgery();
 
 app.MapApplicationEndpoints();
 

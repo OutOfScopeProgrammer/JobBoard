@@ -10,7 +10,7 @@ namespace JobBoard.JobApplicationFeatures.ChangeApplicationStatus;
 public record ApplicationStatusDto(Status Status);
 public class ChangeApplicationStatus : IEndpointMarker
 {
-    public void Register(IEndpointRouteBuilder app)
+    public RouteHandlerBuilder Register(IEndpointRouteBuilder app)
      => app.MapGroup("api")
      .MapPost("application/{applicationId}",
      async ([FromRoute] Guid applicationId,
