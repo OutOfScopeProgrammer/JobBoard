@@ -1,3 +1,4 @@
+using JobBoard.JobFeatures.Mapper;
 using JobBoard.JobFeatures.Services;
 using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Utilities;
@@ -12,7 +13,7 @@ public class GetJobs : IEndpointMarker
         {
             var response = await jobService.GetJobs(cancellationToken);
             return response.IsSuccess ?
-            Results.Ok(response.Data) :
+            Results.Ok(JobMapper.MapToJobDto(response.Data)) :
             Results.NotFound(response.Errors);
         })
         .WithTags("Job")

@@ -1,5 +1,5 @@
+using JobBoard.JobFeatures.Mapper;
 using JobBoard.JobFeatures.Services;
-using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +13,7 @@ public class GetJobById : IEndpointMarker
         {
             var response = await jobService.GetJob(id, cancellationToken);
             return response.IsSuccess ?
-            Results.Ok(response.Data) :
+            Results.Ok(JobMapper.MapToJobDto(response.Data)) :
             Results.NotFound(response.Errors);
         }).WithTags("Job")
         .WithDescription("دریافت شغل با ایدی")
