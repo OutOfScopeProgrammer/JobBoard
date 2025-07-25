@@ -40,7 +40,7 @@ public class CvService(AppDbContext dbContext, IWebHostEnvironment env)
     {
         if (file is null) return "null";
         var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-        var uploadPath = Path.Combine(env.WebRootPath, "userUpload");
+        var uploadPath = Path.Combine(env.WebRootPath, "cvImages");
         Directory.CreateDirectory(uploadPath);
         var storedName = $"{Guid.NewGuid()}{ext}";
         var fullPath = Path.Combine(uploadPath, storedName);

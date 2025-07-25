@@ -12,7 +12,7 @@ public class GetCvById : IEndpointMarker
             var response = await cvService.GetCvById(userId);
             var imageName = Path.GetFileName(response.Data.ImageUrl);
             var baseUrl = $"{context.Request.Scheme}://{context.Request.Host}";
-            var imageUrl = $"{baseUrl}/api/cv/images/{imageName}";
+            var imageUrl = $"{baseUrl}/api/images/cv/{imageName}";
             response.Data.ImageUrl = imageUrl;
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response.Errors);
         });

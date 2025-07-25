@@ -28,5 +28,6 @@ public class UserConfig : IEntityTypeConfiguration<User>
         .HasForeignKey<Cv>(c => c.UserId);
 
         builder.Property(u => u.Name).HasMaxLength(70);
+        builder.HasIndex(u => u.Email).IsUnique();
     }
 }

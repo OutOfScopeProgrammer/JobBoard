@@ -1,5 +1,5 @@
 using JobBoard.Infrastructure.Extensions;
-using JobBoard.Infrastructure.Logger.Middlewares;
+using JobBoard.Infrastructure.Middlewares;
 using JobBoard.Shared.ExceptionHandlers;
 using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Persistence.Seeder;

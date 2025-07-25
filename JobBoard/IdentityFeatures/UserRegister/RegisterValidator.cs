@@ -10,7 +10,7 @@ public class RegisterValidator : AbstractValidator<RegisterDto>
     {
         RuleLevelCascadeMode = CascadeMode.Stop;
         RuleFor(r => r.Email)
-            .EmailAddress().WithMessage("email address is not valid.")
+            .EmailAddress().Must(ShouldContainDot).WithMessage("email address is not valid.")
             .NotEmpty().WithMessage("email address can't be empty.")
             .NotNull().WithMessage("email address can't be null.");
 
@@ -28,6 +28,13 @@ public class RegisterValidator : AbstractValidator<RegisterDto>
                     || RoleName.ToUpper() == ApplicationRoles.APPLICANT.ToString())
                     .WithMessage("role is invalid.");
     }
+
+
+    private bool ShouldContainDot(string email)
+    {
+        return email.Contains('.') & !email.EndsWith('.');
+    }
+
 
 
     private bool ContainsUppercase(string password)

@@ -1,7 +1,7 @@
 
 using System.Diagnostics;
 
-namespace JobBoard.Infrastructure.Logger.Middlewares;
+namespace JobBoard.Infrastructure.Middlewares;
 
 public class LogMiddleware(ILogger<LogMiddleware> logger) : IMiddleware
 {
