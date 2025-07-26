@@ -18,15 +18,14 @@ public class PasswordReset : IEndpointMarker
             var response = await authService.ResetPassword(dto.Email, dto.OldPassword, dto.NewPassword);
             if (!response.IsSuccess)
             {
-                var apiResponse = response.Errors.FirstOrDefault()!.ErrorType switch
-                {
-                    ErrorTypes.Internal => Results.InternalServerError(response.Errors),
-                    ErrorTypes.Unauthorized => Results.Unauthorized(),
-                    _ => Results.InternalServerError(response.Errors)
-                };
-                return apiResponse;
+                if (response.Errors.FirstOrDefault() == ErrorMessages.Unauthorized)
+                    return Results.Unauthorized();
+                else if (response.Errors.FirstOrDefault() == ErrorMessages.Internal)
+                    return Results.InternalServerError();
             }
+
             AuthHelper.SetTokenInCookie(context, response.Data!.AccessToken, jwtSetting.Value);
+
             return Results.Ok(new IdentityResponse(response.Data.UserName, response.Data.Role));
 
         }).WithTags("Identity")

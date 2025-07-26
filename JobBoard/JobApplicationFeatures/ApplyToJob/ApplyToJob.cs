@@ -20,13 +20,12 @@ public class ApplyToJob : IEndpointMarker
         var response = await service.ApplyToJobById(dto.JobId, applicantId, dto.Description, cancellationToken);
         if (!response.IsSuccess)
         {
-            var apiResponse = response.Errors.FirstOrDefault()?.ErrorType switch
-            {
-                ErrorTypes.NotFound => Results.NotFound(response.Errors),
-                _ => Results.InternalServerError(response.Errors),
-            };
-            return apiResponse;
+            if (response.Errors.FirstOrDefault() == ErrorMessages.Internal)
+                return Results.InternalServerError(response.Errors);
+            if (response.Errors.FirstOrDefault() == ErrorMessages.NotFound)
+                return Results.NotFound(response.Errors);
         }
+
         return Results.Created();
     })
     .WithTags("Application")

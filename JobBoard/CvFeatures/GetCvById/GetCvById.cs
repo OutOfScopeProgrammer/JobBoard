@@ -13,8 +13,12 @@ public class GetCvById : IEndpointMarker
         {
             var response = await cvService.GetCvById(userId);
             if (!response.IsSuccess)
-                return Results.BadRequest(response.Errors);
+                return Results.NotFound(response.Errors);
+
             CvMapper.MapToCvDto(response.Data, context.Request.Scheme, context.Request.Host.ToString());
             return Results.Ok(response);
-        });
+        })
+        .Produces(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound)
+        .RequireAuthorization();
 }

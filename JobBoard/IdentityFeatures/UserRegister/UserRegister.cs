@@ -1,3 +1,4 @@
+using System.Diagnostics.Eventing.Reader;
 using JobBoard.IdentityFeatures.Dtos;
 using JobBoard.IdentityFeatures.Services;
 using JobBoard.Infrastructure.Auth;
@@ -20,18 +21,16 @@ public class UserRegister : IEndpointMarker
             var response = await authService.CreateUser(dto.Email, dto.Name, dto.Password, dto.RoleName);
             if (!response.IsSuccess)
             {
-
-                var apiResponse = response.Errors.FirstOrDefault()?.ErrorType switch
-
-                {
-                    ErrorTypes.Conflict => Results.Conflict(response.Errors),
-                    ErrorTypes.Internal => Results.InternalServerError(response.Errors),
-                    _ => Results.BadRequest(response.Errors)
-                }
-                ;
-                return apiResponse;
+                if (response.Errors.FirstOrDefault() == ErrorMessages.Unauthorized)
+                    return Results.Unauthorized();
+                else if (response.Errors.FirstOrDefault() == ErrorMessages.InvalidRole)
+                    return Results.BadRequest(response.Errors);
+                else if (response.Errors.FirstOrDefault() == ErrorMessages.Internal)
+                    return Results.InternalServerError(response.Errors);
             }
+
             AuthHelper.SetTokenInCookie(context, response.Data!.AccessToken, jwtSetting.Value);
+
             return Results.Ok(new IdentityResponse(
                 response.Data.UserName,
                 response.Data.Role));

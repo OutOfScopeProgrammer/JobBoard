@@ -18,17 +18,18 @@ public class ChangeApplicationStatus : IEndpointMarker
          var response = await service.ChangeApplicationStatus(applicationId, dto.Status, cancellationToken);
          if (!response.IsSuccess)
          {
-             var apiResponse = response.Errors.FirstOrDefault()?.ErrorType switch
-             {
-                 ErrorTypes.NotFound => Results.NotFound(response.Errors),
-                 _ => Results.InternalServerError(response.Errors)
-             };
-             return apiResponse;
+             if (response.Errors.FirstOrDefault() == ErrorMessages.Internal)
+                 return Results.InternalServerError(response.Errors);
+             if (response.Errors.FirstOrDefault() == ErrorMessages.NotFound)
+                 return Results.NotFound(response.Errors);
          }
          return Results.NoContent();
      })
      .WithTags("Application")
      .WithSummary("Change application status")
      .WithDescription("تغییر وضعیت رزومه کارجو")
+     .Produces(StatusCodes.Status404NotFound)
+     .Produces(StatusCodes.Status204NoContent)
+     .Produces(StatusCodes.Status500InternalServerError)
      .RequireAuthorization(AuthPolicy.EmployeeOnly);
 }

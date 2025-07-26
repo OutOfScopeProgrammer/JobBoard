@@ -3,6 +3,7 @@ using JobBoard.Infrastructure.Auth;
 using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace JobBoard.CvFeatures.CreateCv;
 
@@ -19,13 +20,17 @@ public class CreateCv : IEndpointMarker
 
             var userId = AuthHelper.GetUserId(context);
             var response = await cvService.CreateCv(dto.FullName, dto.FullAddress, dto.City, dto.ExpectedSalary, dto.Image, userId);
-            return response.IsSuccess ?
-            Results.Created() :
-            Results.BadRequest(response.Errors);
-
+            if (response.IsSuccess)
+                return Results.Created();
+            else if (response.Errors.FirstOrDefault() == ErrorMessages.Conflict)
+                return Results.Conflict();
+            else
+                return Results.InternalServerError();
         })
         .Produces(StatusCodes.Status201Created)
         .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status409Conflict)
+        .Produces(StatusCodes.Status500InternalServerError)
         .AddEndpointFilter<ValidationFilter<CreateCvDto>>()
         .RequireAuthorization(AuthPolicy.ApplicantOnly);
 }

@@ -10,14 +10,14 @@ public class JobService(AppDbContext dbContext)
     public async Task<Response<List<Job>>> GetJobs(CancellationToken cancellationToken)
     {
         var jobs = await dbContext.Jobs.ToListAsync(cancellationToken);
-        if (jobs.FirstOrDefault() is null) return Response<List<Job>>.Failure(new Error(ErrorTypes.NotFound, "jobs not found"));
+        if (jobs.FirstOrDefault() is null) return Response<List<Job>>.Failure(ErrorMessages.NotFound);
         return Response<List<Job>>.Success(jobs);
     }
     public async Task<Response<Job>> GetJob(Guid jobId, CancellationToken cancellationToken)
     {
         var job = await dbContext.Jobs.FirstOrDefaultAsync(j => j.Id == jobId);
         if (job is null)
-            return Response<Job>.Failure(new Error(ErrorTypes.NotFound, "Job not found"));
+            return Response<Job>.Failure(ErrorMessages.NotFound);
         return Response<Job>.Success(job);
     }
     public async Task<Response<Guid>> CreateJob(string title, string description, int salary, Guid userId, CancellationToken cancellationToken)
@@ -25,17 +25,17 @@ public class JobService(AppDbContext dbContext)
         var job = Job.Create(title, description, userId, salary);
         dbContext.Jobs.Add(job);
         if (await dbContext.SaveChangesAsync(cancellationToken) <= 0)
-            return Response<Guid>.Failure(new Error(ErrorTypes.Internal, "Something went wrong"));
+            return Response<Guid>.Failure(ErrorMessages.Internal);
         return Response<Guid>.Success(job.Id);
     }
 
     public async Task<Response<bool>> UpdateJob(string? title, string? description, Guid jobId, CancellationToken cancellationToken)
     {
         var job = await dbContext.Jobs.FirstOrDefaultAsync(j => j.Id == jobId);
-        if (job is null) return Response<bool>.Failure(new Error(ErrorTypes.NotFound, "Job not found"));
+        if (job is null) return Response<bool>.Failure(ErrorMessages.NotFound);
         job.UpdateJob(title, description);
         if (await dbContext.SaveChangesAsync(cancellationToken) <= 0)
-            return Response<bool>.Failure(new Error(ErrorTypes.Internal, "Something went wrong"));
+            return Response<bool>.Failure(ErrorMessages.Internal);
         return Response<bool>.Success();
 
     }

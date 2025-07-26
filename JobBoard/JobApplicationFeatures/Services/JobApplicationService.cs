@@ -13,11 +13,11 @@ public class JobApplicationService(AppDbContext dbContext)
     {
         var job = await dbContext.Jobs.FirstOrDefaultAsync(j => j.Id == jobId, cancellationToken);
         if (job is null)
-            return Response<Guid>.Failure(new Error(ErrorTypes.NotFound, "Job is not found"));
+            return Response<Guid>.Failure(ErrorMessages.NotFound);
         var application = Application.Create(description, job.Id, applicantId, Status.Submitted);
         dbContext.Applications.Add(application);
         if (await dbContext.SaveChangesAsync(cancellationToken) <= 0)
-            return Response<Guid>.Failure(new Error(ErrorTypes.Internal, "internal server error"));
+            return Response<Guid>.Failure(ErrorMessages.Internal);
 
         return Response<Guid>.Success(application.Id);
     }
@@ -28,7 +28,7 @@ public class JobApplicationService(AppDbContext dbContext)
         var application = await dbContext.Applications
         .FirstOrDefaultAsync(a => a.Id == applicationId, cancellationToken);
         return application is null ?
-        Response<Application>.Failure(new Error(ErrorTypes.NotFound, "Application not Found")) :
+        Response<Application>.Failure(ErrorMessages.NotFound) :
         Response<Application>.Success(application);
     }
 
@@ -37,7 +37,7 @@ public class JobApplicationService(AppDbContext dbContext)
         var applications = await dbContext.Applications
         .Where(a => a.JobId == jobId).ToListAsync(cancellationToken);
         return applications is null ?
-        Response<List<Application>>.Failure(new Error(ErrorTypes.NotFound, "no application for job")) :
+        Response<List<Application>>.Failure(ErrorMessages.NotFound) :
         Response<List<Application>>.Success(applications);
     }
 
@@ -45,10 +45,10 @@ public class JobApplicationService(AppDbContext dbContext)
     {
         var application = await dbContext.Applications.FirstOrDefaultAsync(a => a.Id == applicationId, cancellationToken);
         if (application is null)
-            return Response<bool>.Failure(new Error(ErrorTypes.NotFound, "application not found"));
+            return Response<bool>.Failure(ErrorMessages.NotFound);
         application.ChangeStatus(status);
         if (await dbContext.SaveChangesAsync(cancellationToken) <= 0)
-            return Response<bool>.Failure(new Error(ErrorTypes.Internal, "internal server error"));
+            return Response<bool>.Failure(ErrorMessages.Internal);
         return Response<bool>.Success();
     }
 

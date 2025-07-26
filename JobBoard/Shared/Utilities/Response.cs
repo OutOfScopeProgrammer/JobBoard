@@ -1,18 +1,6 @@
-using System.Text.Json.Serialization;
-
 namespace JobBoard.Shared.Utilities;
 
-public record Error(ErrorTypes ErrorType, string ErrorMessage);
-[JsonConverter(typeof(JsonStringEnumConverter))]
-public enum ErrorTypes
-{
-    NotFound,
-    UnSupportedFormat,
-    InvalidRole,
-    Conflict,
-    Internal,
-    Unauthorized
-}
+
 
 
 /// <summary>
@@ -33,7 +21,7 @@ public class Response<T>
     /// <summary>
     /// A list of error messages if the operation failed;eempty if successful.
     /// </summary>
-    public List<Error> Errors { get; set; } = [];
+    public List<string> Errors { get; set; } = [];
 
     /// <summary>
     /// Private constructor for full response initialization.
@@ -41,7 +29,7 @@ public class Response<T>
     /// <param name="data">The data payload./>.</param>
     /// <param name="isSuccess">The success status of the operation.</param>
     /// <param name="errors">A list of errors if any occurred.</param>
-    private Response(T? data, bool isSuccess, List<Error>? errors)
+    private Response(T? data, bool isSuccess, List<string>? errors)
     {
 
         IsSuccess = isSuccess;
@@ -53,7 +41,7 @@ public class Response<T>
     /// </summary>
     /// <param name="isSuccess">The success status of the operation.</param>
     /// <param name="errors">A list of errors if any occurred.</param>
-    private Response(bool isSuccess, List<Error>? errors)
+    private Response(bool isSuccess, List<string>? errors)
     {
         IsSuccess = isSuccess;
         Errors = errors ?? Errors;
@@ -74,11 +62,11 @@ public class Response<T>
     /// Creates a failed response witout any data.
     /// </summary>
     /// <returns>a failed operation with error messages in <c>Response.Errors</c>.</returns>
-    public static Response<T> Failure(List<Error> errors) => new(false, errors);
+    public static Response<T> Failure(List<string> errors) => new(false, errors);
     /// <summary>
     /// Creates a failed response witout any data.
     /// </summary>
     /// <returns>a failed operation with error messages in <c>Response.Errors</c>.</returns>
-    public static Response<T> Failure(Error error) => new(false, [error]);
+    public static Response<T> Failure(string error) => new(false, [error]);
 
 }

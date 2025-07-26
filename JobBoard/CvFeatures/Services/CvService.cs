@@ -16,7 +16,12 @@ public class CvService(AppDbContext dbContext, ImageProcessor imageProcessor)
         var applicant = await dbContext.Users.Include(u => u.Role)
             .FirstOrDefaultAsync(u => u.Id == userId & u.Role.RoleName == ApplicationRoles.APPLICANT.ToString());
         if (applicant is null)
-            return Response<bool>.Failure(new Error(ErrorTypes.NotFound, "user not found"));
+            return Response<bool>.Failure(ErrorMessages.NotFound);
+
+        var hasCv = await dbContext.Cvs.SingleOrDefaultAsync(c => c.UserId == applicant.Id);
+        if (hasCv is not null)
+            return Response<bool>.Failure(ErrorMessages.Conflict);
+
         var cv = Cv.Create(fullName, fullAddress, city, expectedSalary, applicant.Id);
         if (image is not null)
         {
@@ -29,7 +34,7 @@ public class CvService(AppDbContext dbContext, ImageProcessor imageProcessor)
 
         dbContext.Cvs.Add(cv);
         if (await dbContext.SaveChangesAsync() <= 0)
-            return Response<bool>.Failure(new Error(ErrorTypes.Internal, "internalserverError"));
+            return Response<bool>.Failure(ErrorMessages.Internal);
 
         return Response<bool>.Success();
     }
@@ -38,7 +43,7 @@ public class CvService(AppDbContext dbContext, ImageProcessor imageProcessor)
     {
         var cv = await dbContext.Cvs.FirstOrDefaultAsync(c => c.UserId == userId);
         return cv is null ?
-        Response<Cv>.Failure(new Error(ErrorTypes.NotFound, "not found.")) :
+        Response<Cv>.Failure(ErrorMessages.NotFound) :
         Response<Cv>.Success(cv);
     }
 }
