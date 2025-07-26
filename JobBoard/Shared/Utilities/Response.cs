@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace JobBoard.Shared.Utilities;
 
 
@@ -13,6 +15,8 @@ public class Response<T>
     /// <summary>
     /// Indicates wheter the operation was successful.
     /// </summary>
+    [MemberNotNullWhen(true, nameof(Data))]
+
     public bool IsSuccess { get; set; }
     /// <summary>
     /// The data returned if operation was successful;otherwise, null.
@@ -51,7 +55,6 @@ public class Response<T>
     /// Creates a successful response without any data.
     /// </summary>
     /// <returns>A successful <c>Response</c> instance of type <c><c><typeparamref name="T"/></c></c>.</returns>
-    public static Response<T> Success() => new(true, null);
 
     /// <summary>
     /// Creates a successful response witany data.
@@ -68,5 +71,34 @@ public class Response<T>
     /// </summary>
     /// <returns>a failed operation with error messages in <c>Response.Errors</c>.</returns>
     public static Response<T> Failure(string error) => new(false, [error]);
+
+}
+
+
+public class Response
+{
+    public bool IsSuccess { get; set; }
+    public List<string> Errors { get; set; } = [];
+    private Response(bool isSuccess, List<string>? errors)
+    {
+        IsSuccess = isSuccess;
+        Errors = errors ?? Errors;
+    }
+
+    /// <summary>
+    /// Creates a successful response without any data.
+    /// </summary>
+    /// <returns>A successful <c>Response</c> instance of type <c><c><typeparamref name="T"/></c></c>.</returns>
+    public static Response Success() => new(true, null);
+    /// <summary>
+    /// Creates a failed response witout any data.
+    /// </summary>
+    /// <returns>a failed operation with error messages in <c>Response.Errors</c>.</returns>
+    public static Response Failure(List<string> errors) => new(false, errors);
+    /// <summary>
+    /// Creates a failed response witout any data.
+    /// </summary>
+    /// <returns>a failed operation with error messages in <c>Response.Errors</c>.</returns>
+    public static Response Failure(string error) => new(false, [error]);
 
 }

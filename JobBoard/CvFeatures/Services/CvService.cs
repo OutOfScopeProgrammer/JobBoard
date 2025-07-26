@@ -10,33 +10,33 @@ namespace JobBoard.CvFeatures.Services;
 public class CvService(AppDbContext dbContext, ImageProcessor imageProcessor)
 {
 
-    public async Task<Response<bool>> CreateCv(string fullName, string? fullAddress,
+    public async Task<Response> CreateCv(string fullName, string? fullAddress,
      string city, int expectedSalary, IFormFile image, Guid userId)
     {
         var applicant = await dbContext.Users.Include(u => u.Role)
             .FirstOrDefaultAsync(u => u.Id == userId & u.Role.RoleName == ApplicationRoles.APPLICANT.ToString());
         if (applicant is null)
-            return Response<bool>.Failure(ErrorMessages.NotFound);
+            return Response.Failure(ErrorMessages.NotFound);
 
         var hasCv = await dbContext.Cvs.SingleOrDefaultAsync(c => c.UserId == applicant.Id);
         if (hasCv is not null)
-            return Response<bool>.Failure(ErrorMessages.Conflict);
+            return Response.Failure(ErrorMessages.Conflict);
 
         var cv = Cv.Create(fullName, fullAddress, city, expectedSalary, applicant.Id);
         if (image is not null)
         {
             var imageUrl = await imageProcessor.SaveImage(image);
             if (!imageUrl.IsSuccess)
-                return Response<bool>.Failure(imageUrl.Errors);
+                return Response.Failure(imageUrl.Errors);
 
             cv.SetImage(imageUrl.Data!);
         }
 
         dbContext.Cvs.Add(cv);
         if (await dbContext.SaveChangesAsync() <= 0)
-            return Response<bool>.Failure(ErrorMessages.Internal);
+            return Response.Failure(ErrorMessages.Internal);
 
-        return Response<bool>.Success();
+        return Response.Success();
     }
 
     public async Task<Response<Cv>> GetCvById(Guid userId)

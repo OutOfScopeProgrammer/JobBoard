@@ -29,14 +29,14 @@ public class JobService(AppDbContext dbContext)
         return Response<Guid>.Success(job.Id);
     }
 
-    public async Task<Response<bool>> UpdateJob(string? title, string? description, Guid jobId, CancellationToken cancellationToken)
+    public async Task<Response> UpdateJob(string? title, string? description, Guid jobId, CancellationToken cancellationToken)
     {
         var job = await dbContext.Jobs.FirstOrDefaultAsync(j => j.Id == jobId);
-        if (job is null) return Response<bool>.Failure(ErrorMessages.NotFound);
+        if (job is null) return Response.Failure(ErrorMessages.NotFound);
         job.UpdateJob(title, description);
         if (await dbContext.SaveChangesAsync(cancellationToken) <= 0)
-            return Response<bool>.Failure(ErrorMessages.Internal);
-        return Response<bool>.Success();
+            return Response.Failure(ErrorMessages.Internal);
+        return Response.Success();
 
     }
 }

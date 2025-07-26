@@ -41,15 +41,15 @@ public class JobApplicationService(AppDbContext dbContext)
         Response<List<Application>>.Success(applications);
     }
 
-    public async Task<Response<bool>> ChangeApplicationStatus(Guid applicationId, Status status, CancellationToken cancellationToken)
+    public async Task<Response> ChangeApplicationStatus(Guid applicationId, Status status, CancellationToken cancellationToken)
     {
         var application = await dbContext.Applications.FirstOrDefaultAsync(a => a.Id == applicationId, cancellationToken);
         if (application is null)
-            return Response<bool>.Failure(ErrorMessages.NotFound);
+            return Response.Failure(ErrorMessages.NotFound);
         application.ChangeStatus(status);
         if (await dbContext.SaveChangesAsync(cancellationToken) <= 0)
-            return Response<bool>.Failure(ErrorMessages.Internal);
-        return Response<bool>.Success();
+            return Response.Failure(ErrorMessages.Internal);
+        return Response.Success();
     }
 
 }
