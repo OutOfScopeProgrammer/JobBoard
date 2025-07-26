@@ -13,18 +13,21 @@ public class Cv : Auditable
     public Guid UserId { get; set; }
 
 
+
+    public void SetImage(string url) => ImageUrl = url;
+
     private Cv(string fullName, string? fullAddress,
-     string city, int expectedSalary, string? imageUrl, Guid userId)
+     string city, int expectedSalary, Guid userId)
     {
         FullName = fullName;
         FullAddress = fullAddress ?? string.Empty;
         City = city;
         ExpectedSalary = expectedSalary;
-        ImageUrl = imageUrl;
         UserId = userId;
     }
 
     public static Cv Create(string fullName, string? fullAddress,
-     string city, int expectedSalary, string? imageUrl, Guid userId)
-        => new(fullName, fullAddress, city, expectedSalary, imageUrl, userId);
+     string city, int expectedSalary, Guid userId)
+        => new(fullName, fullAddress, city, expectedSalary, userId);
+
 }

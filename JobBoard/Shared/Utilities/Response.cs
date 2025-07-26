@@ -7,6 +7,7 @@ public record Error(ErrorTypes ErrorType, string ErrorMessage);
 public enum ErrorTypes
 {
     NotFound,
+    UnSupportedFormat,
     InvalidRole,
     Conflict,
     Internal,

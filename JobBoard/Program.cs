@@ -4,8 +4,6 @@ using JobBoard.Shared.ExceptionHandlers;
 using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Persistence.Seeder;
 using Scalar.AspNetCore;
-using Serilog;
-
 
 
 var builder = WebApplication.CreateBuilder(args);

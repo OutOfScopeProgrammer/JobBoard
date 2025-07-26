@@ -1,6 +1,5 @@
 using JobBoard.JobFeatures.Mapper;
 using JobBoard.JobFeatures.Services;
-using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Utilities;
 
 namespace JobBoard.JobFeatures.GetJobs;

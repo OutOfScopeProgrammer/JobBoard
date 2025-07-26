@@ -1,6 +1,5 @@
 using JobBoard.Infrastructure.Auth;
 using JobBoard.JobFeatures.Services;
-using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,4 +1,6 @@
+using JobBoard.CvFeatures.Mapper;
 using JobBoard.CvFeatures.Services;
+using JobBoard.Domain.Entities;
 using JobBoard.Shared.Utilities;
 
 namespace JobBoard.CvFeatures.GetCvById;
@@ -12,12 +14,7 @@ public class GetCvById : IEndpointMarker
             var response = await cvService.GetCvById(userId);
             if (!response.IsSuccess)
                 return Results.BadRequest(response.Errors);
-
-            var imageName = Path.GetFileName(response.Data!.ImageUrl);
-            var baseUrl = $"{context.Request.Scheme}://{context.Request.Host}";
-            var imageUrl = $"{baseUrl}/api/images/cv/{imageName}";
-            response.Data.ImageUrl = imageUrl;
-
+            CvMapper.MapToCvDto(response.Data, context.Request.Scheme, context.Request.Host.ToString());
             return Results.Ok(response);
         });
 }

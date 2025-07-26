@@ -1,8 +1,7 @@
-using System.Security.Claims;
 using JobBoard.CvFeatures.Services;
 using JobBoard.Infrastructure.Auth;
+using JobBoard.Shared.EndpointFilters;
 using JobBoard.Shared.Utilities;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobBoard.CvFeatures.CreateCv;
@@ -23,5 +22,10 @@ public class CreateCv : IEndpointMarker
             return response.IsSuccess ?
             Results.Created() :
             Results.BadRequest(response.Errors);
-        }).RequireAuthorization(AuthPolicy.ApplicantOnly);
+
+        })
+        .Produces(StatusCodes.Status201Created)
+        .Produces(StatusCodes.Status400BadRequest)
+        .AddEndpointFilter<ValidationFilter<CreateCvDto>>()
+        .RequireAuthorization(AuthPolicy.ApplicantOnly);
 }

@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using JobBoard.Domain.Entities;
+using JobBoard.FileFeatures;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Utilities;
@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JobBoard.CvFeatures.Services;
 
-public class CvService(AppDbContext dbContext, IWebHostEnvironment env)
+public class CvService(AppDbContext dbContext, ImageProcessor imageProcessor)
 {
 
     public async Task<Response<bool>> CreateCv(string fullName, string? fullAddress,
@@ -17,9 +17,16 @@ public class CvService(AppDbContext dbContext, IWebHostEnvironment env)
             .FirstOrDefaultAsync(u => u.Id == userId & u.Role.RoleName == ApplicationRoles.APPLICANT.ToString());
         if (applicant is null)
             return Response<bool>.Failure(new Error(ErrorTypes.NotFound, "user not found"));
+        var cv = Cv.Create(fullName, fullAddress, city, expectedSalary, applicant.Id);
+        if (image is not null)
+        {
+            var imageUrl = await imageProcessor.SaveImage(image);
+            if (!imageUrl.IsSuccess)
+                return Response<bool>.Failure(imageUrl.Errors);
 
-        var imageUrl = await SaveFile(image);
-        var cv = Cv.Create(fullName, fullAddress, city, expectedSalary, imageUrl, applicant.Id);
+            cv.SetImage(imageUrl.Data!);
+        }
+
         dbContext.Cvs.Add(cv);
         if (await dbContext.SaveChangesAsync() <= 0)
             return Response<bool>.Failure(new Error(ErrorTypes.Internal, "internalserverError"));
@@ -34,19 +41,4 @@ public class CvService(AppDbContext dbContext, IWebHostEnvironment env)
         Response<Cv>.Failure(new Error(ErrorTypes.NotFound, "not found.")) :
         Response<Cv>.Success(cv);
     }
-
-
-    private async Task<string> SaveFile(IFormFile file)
-    {
-        if (file is null) return "null";
-        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-        var uploadPath = Path.Combine(env.WebRootPath, "cvImages");
-        Directory.CreateDirectory(uploadPath);
-        var storedName = $"{Guid.NewGuid()}{ext}";
-        var fullPath = Path.Combine(uploadPath, storedName);
-        using var stream = File.Create(fullPath);
-        await file.CopyToAsync(stream);
-        return fullPath;
-    }
-
 }
