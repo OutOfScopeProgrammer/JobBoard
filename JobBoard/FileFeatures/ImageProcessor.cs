@@ -10,7 +10,7 @@ public class ImageProcessor(IWebHostEnvironment env)
         ArgumentNullException.ThrowIfNull(file);
         var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
         if (!AllowedFormats.Contains(ext))
-            return Response<string>.Failure(new Error(ErrorTypes.UnSupportedFormat, "image format is not supported."));
+            return Response<string>.Failure(ErrorMessages.UnsupportedFormat);
         var uploadPath = Path.Combine(env.WebRootPath, "cvImages");
         Directory.CreateDirectory(uploadPath);
         var storedName = $"{Guid.NewGuid()}{ext}";

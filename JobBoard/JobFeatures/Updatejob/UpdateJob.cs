@@ -17,12 +17,10 @@ public class UpdateJob : IEndpointMarker
          var response = await jobService.UpdateJob(dto.Title, dto.Description, jobId, cancellationToken);
          if (!response.IsSuccess)
          {
-             var apiResponse = response.Errors.FirstOrDefault()?.ErrorType switch
-             {
-                 ErrorTypes.NotFound => Results.NotFound(response.Errors),
-                 _ => Results.NotFound(response.Errors),
-             };
-             return apiResponse;
+             if (response.Errors.FirstOrDefault() == ErrorMessages.NotFound)
+                 return Results.NotFound(response.Errors);
+             if (response.Errors.FirstOrDefault() == ErrorMessages.Internal)
+                 return Results.InternalServerError(response.Errors);
          }
          return Results.NoContent();
 
