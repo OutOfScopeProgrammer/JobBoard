@@ -9,6 +9,8 @@ public class Application : Auditable
     public Guid ApplicantId { get; set; }
     public Guid JobId { get; set; }
     public Status Status { get; set; }
+    public byte[] ConcurrencyToken { get; set; } = Guid.NewGuid().ToByteArray();
+
     public Application() { }
     private Application(string description, Guid jobId, Guid applicantId, Status status)
     {

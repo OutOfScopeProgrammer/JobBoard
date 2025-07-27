@@ -29,5 +29,7 @@ public class UserConfig : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.Name).HasMaxLength(70);
         builder.HasIndex(u => u.Email).IsUnique();
+        builder.Property(u => u.ConcurrencyToken).IsConcurrencyToken();
+
     }
 }

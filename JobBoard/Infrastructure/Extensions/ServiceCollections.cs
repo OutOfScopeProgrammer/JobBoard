@@ -3,8 +3,10 @@ using System.Text;
 using FluentValidation;
 using JobBoard.CvFeatures.Services;
 using JobBoard.Domain.Entities;
+using JobBoard.FileFeatures;
 using JobBoard.IdentityFeatures.Services;
 using JobBoard.Infrastructure.Auth;
+using JobBoard.Infrastructure.ExceptionHandlers;
 using JobBoard.Infrastructure.Middlewares;
 using JobBoard.Infrastructure.Persistence.Intercepters;
 using JobBoard.JobApplicationFeatures.Services;
@@ -40,6 +42,8 @@ public static class ServiceCollections
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         services.AddScoped<CvService>();
         services.AddScoped<LogMiddleware>();
+        services.AddScoped<GlobalExceptionHandler>();
+        services.AddScoped<ImageProcessor>();
     }
 
     private static void ApplicationPersistence(this IServiceCollection services, IConfiguration configuration)
@@ -47,6 +51,8 @@ public static class ServiceCollections
         var connectionString = configuration.GetConnectionString("Database");
         if (connectionString is null) throw new Exception("Connection string problem");
         services.AddScoped<IInterceptor, AuditIntercepter>();
+        services.AddScoped<IInterceptor, ConcurrencyInterceptor>();
+
 
         services.AddDbContext<AppDbContext>((provider, option) =>
         {
@@ -79,6 +85,7 @@ public static class ServiceCollections
             {
                 OnMessageReceived = context =>
                 {
+
                     var token = context.HttpContext.Request.Cookies["access_token"];
                     context.Token = token;
                     return Task.CompletedTask;

@@ -10,6 +10,7 @@ public class Job : Auditable
     public DateTime ClosedAt { get; set; }
 
     public Guid EmployeeId { get; set; }
+    public byte[] ConcurrencyToken { get; set; } = Guid.NewGuid().ToByteArray();
 
     public Job() { }
     private Job(string title, string description, Guid employeeId, int salary)

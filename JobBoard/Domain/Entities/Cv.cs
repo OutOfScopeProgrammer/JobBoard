@@ -11,6 +11,8 @@ public class Cv : Auditable
     public string? ImageUrl { get; set; }
 
     public Guid UserId { get; set; }
+    public byte[] ConcurrencyToken { get; set; } = Guid.NewGuid().ToByteArray();
+
 
 
 

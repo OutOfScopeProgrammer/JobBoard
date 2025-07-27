@@ -11,5 +11,6 @@ public class ApplicationConfig : IEntityTypeConfiguration<Application>
     {
         builder.HasKey(a => a.Id);
         builder.Property(a => a.Description).HasMaxLength(200);
+        builder.Property(a => a.ConcurrencyToken).IsConcurrencyToken();
     }
 }

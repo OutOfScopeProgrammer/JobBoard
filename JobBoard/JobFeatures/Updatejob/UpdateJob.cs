@@ -12,7 +12,7 @@ public class UpdateJob : IEndpointMarker
      => app.MapGroup("api")
      .MapPut("job", async ([FromBody] UpdateJobDto dto, JobService jobService, CancellationToken cancellationToken) =>
      {
-         if (Guid.TryParse(dto.JobId, out var jobId))
+         if (!Guid.TryParse(dto.JobId, out Guid jobId))
              return Results.BadRequest("Job id is not valid");
          var response = await jobService.UpdateJob(dto.Title, dto.Description, jobId, cancellationToken);
          if (!response.IsSuccess)

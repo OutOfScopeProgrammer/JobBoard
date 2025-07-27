@@ -19,5 +19,7 @@ public class JobConfig : IEntityTypeConfiguration<Job>
         builder.Property(j => j.Title).HasMaxLength(100).IsRequired();
         builder.Property(j => j.Salary).IsRequired();
 
+        builder.Property(j => j.ConcurrencyToken).IsConcurrencyToken();
+
     }
 }

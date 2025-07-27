@@ -1,6 +1,6 @@
+using JobBoard.Infrastructure.ExceptionHandlers;
 using JobBoard.Infrastructure.Extensions;
 using JobBoard.Infrastructure.Middlewares;
-using JobBoard.Shared.ExceptionHandlers;
 using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Persistence.Seeder;
 using Scalar.AspNetCore;
@@ -17,7 +17,7 @@ builder.Services.AddProjectDependecy(builder.Configuration);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
-app.UseGlobalExceptionhandler();
+app.UseMiddleware<GlobalExceptionHandler>();
 app.UseMiddleware<LogMiddleware>();
 
 using var scope = app.Services.CreateScope();
@@ -39,6 +39,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapApplicationEndpoints();
+
+
 
 app.Run();
 

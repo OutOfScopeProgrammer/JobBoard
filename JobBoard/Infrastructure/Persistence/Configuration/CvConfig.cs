@@ -11,6 +11,8 @@ public class CvConfig : IEntityTypeConfiguration<Cv>
         builder.Property(c => c.City).HasMaxLength(50).IsRequired();
         builder.Property(c => c.FullAddress).HasMaxLength(300);
         builder.Property(c => c.FullName).HasMaxLength(200);
+        builder.Property(c => c.ConcurrencyToken).IsConcurrencyToken();
+
 
 
 
