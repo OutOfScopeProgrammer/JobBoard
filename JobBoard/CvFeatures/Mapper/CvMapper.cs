@@ -1,4 +1,3 @@
-using FluentValidation.Validators;
 using JobBoard.Domain.Entities;
 
 namespace JobBoard.CvFeatures.Mapper;

@@ -1,5 +1,3 @@
-
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
 namespace JobBoard.Infrastructure.ExceptionHandlers;

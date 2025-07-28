@@ -9,13 +9,15 @@ public class JobService(AppDbContext dbContext)
 {
     public async Task<Response<List<Job>>> GetJobs(CancellationToken cancellationToken)
     {
-        var jobs = await dbContext.Jobs.ToListAsync(cancellationToken);
+        var jobs = await dbContext.Jobs.AsNoTracking()
+            .ToListAsync(cancellationToken);
+
         if (jobs.FirstOrDefault() is null) return Response<List<Job>>.Failure(ErrorMessages.NotFound);
         return Response<List<Job>>.Success(jobs);
     }
-    public async Task<Response<Job>> GetJob(Guid jobId, CancellationToken cancellationToken)
+    public async Task<Response<Job>> GetJobById(Guid jobId, CancellationToken cancellationToken)
     {
-        var job = await dbContext.Jobs.FirstOrDefaultAsync(j => j.Id == jobId);
+        var job = await dbContext.Jobs.AsNoTracking().FirstOrDefaultAsync(j => j.Id == jobId);
         if (job is null)
             return Response<Job>.Failure(ErrorMessages.NotFound);
         return Response<Job>.Success(job);

@@ -1,4 +1,3 @@
-using System.Diagnostics.Eventing.Reader;
 using JobBoard.IdentityFeatures.Dtos;
 using JobBoard.IdentityFeatures.Services;
 using JobBoard.Infrastructure.Auth;

@@ -13,7 +13,8 @@ public class CvService(AppDbContext dbContext, ImageProcessor imageProcessor)
     public async Task<Response> CreateCv(string fullName, string? fullAddress,
      string city, int expectedSalary, IFormFile image, Guid userId)
     {
-        var applicant = await dbContext.Users.Include(u => u.Role)
+        var applicant = await dbContext.Users.AsNoTracking()
+            .Include(u => u.Role)
             .FirstOrDefaultAsync(u => u.Id == userId & u.Role.RoleName == ApplicationRoles.APPLICANT.ToString());
         if (applicant is null)
             return Response.Failure(ErrorMessages.NotFound);
@@ -39,9 +40,9 @@ public class CvService(AppDbContext dbContext, ImageProcessor imageProcessor)
         return Response.Success();
     }
 
-    public async Task<Response<Cv>> GetCvById(Guid userId)
+    public async Task<Response<Cv>> GetCvById(Guid cvId)
     {
-        var cv = await dbContext.Cvs.FirstOrDefaultAsync(c => c.UserId == userId);
+        var cv = await dbContext.Cvs.AsNoTracking().FirstOrDefaultAsync(c => c.Id == cvId);
         return cv is null ?
         Response<Cv>.Failure(ErrorMessages.NotFound) :
         Response<Cv>.Success(cv);

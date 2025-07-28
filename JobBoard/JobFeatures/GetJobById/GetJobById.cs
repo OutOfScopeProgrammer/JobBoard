@@ -11,7 +11,7 @@ public class GetJobById : IEndpointMarker
         => app.MapGroup("api")
         .MapGet("job/{id:guid}", async ([FromRoute] Guid id, JobService jobService, CancellationToken cancellationToken) =>
         {
-            var response = await jobService.GetJob(id, cancellationToken);
+            var response = await jobService.GetJobById(id, cancellationToken);
             return response.IsSuccess ?
             Results.Ok(JobMapper.MapToJobDto(response.Data)) :
             Results.NotFound(response.Errors);

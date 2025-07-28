@@ -40,8 +40,6 @@ app.UseAuthorization();
 
 app.MapApplicationEndpoints();
 
-
-
 app.Run();
 
 

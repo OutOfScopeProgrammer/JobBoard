@@ -1,6 +1,5 @@
 using JobBoard.CvFeatures.Mapper;
 using JobBoard.CvFeatures.Services;
-using JobBoard.Domain.Entities;
 using JobBoard.Shared.Utilities;
 
 namespace JobBoard.CvFeatures.GetCvById;
