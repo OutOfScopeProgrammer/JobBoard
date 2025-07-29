@@ -2,7 +2,7 @@ using JobBoard.Domain.Entities;
 using JobBoard.IdentityFeatures.Services;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Shared.Utilities;
-using JobBoard.UnitTest.IdentityFeatures.ClassFixtures;
+using JobBoard.UnitTest.IdentityFeatures.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using NSubstitute;

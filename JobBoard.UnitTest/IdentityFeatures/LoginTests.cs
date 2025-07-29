@@ -3,23 +3,22 @@ using JobBoard.Domain.Entities;
 using JobBoard.IdentityFeatures.Services;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Shared.Utilities;
-using JobBoard.UnitTest.IdentityFeatures.ClassFixtures;
+using JobBoard.UnitTest.IdentityFeatures.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using Xunit.Sdk;
 
 namespace JobBoard.UnitTest.IdentityFeatures;
 
-public class UserLoginTests : IDisposable
+public class LoginTests : IDisposable
 {
     private InMemoryDb inMemoryDb;
     private PasswordHasher<User> hasher;
     private TokenProvider tokenProvider;
     private IdentityService unit;
 
-    public UserLoginTests()
+    public LoginTests()
     {
-        this.inMemoryDb = new InMemoryDb();
+        inMemoryDb = new InMemoryDb();
         var setting = new JwtSetting
         {
             Audience = "test",
