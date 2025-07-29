@@ -56,8 +56,9 @@ public static class ServiceCollections
 
         services.AddDbContext<AppDbContext>((provider, option) =>
         {
-            var intercepters = provider.GetServices<IInterceptor>();
-            if (intercepters is null) throw new Exception("interceptors is not configured");
+            var intercepters = provider.GetServices<IInterceptor>() ??
+             throw new Exception("interceptors is not configured");
+
             option.UseNpgsql(connectionString);
             option.EnableSensitiveDataLogging();
             option.AddInterceptors(intercepters);

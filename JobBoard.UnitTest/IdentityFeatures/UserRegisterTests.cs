@@ -1,10 +1,9 @@
 using JobBoard.Domain.Entities;
 using JobBoard.IdentityFeatures.Services;
 using JobBoard.Infrastructure.Auth;
-using JobBoard.Shared.Persistence;
 using JobBoard.Shared.Utilities;
+using JobBoard.UnitTest.IdentityFeatures.ClassFixtures;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 
@@ -12,14 +11,14 @@ namespace JobBoard.UnitTest.IdentityFeatures;
 
 
 
-public class UserRegisterTests : IAsyncLifetime
+public class UserRegisterTests : IDisposable
 {
     private IdentityService unit;
-    private AppDbContext context;
     private IPasswordHasher<User> hasher = Substitute.For<IPasswordHasher<User>>();
     private TokenProvider tokenProvider;
+    private readonly InMemoryDb inMemoryDb;
 
-    public async Task InitializeAsync()
+    public UserRegisterTests()
     {
         var setting = new JwtSetting
         {
@@ -28,35 +27,19 @@ public class UserRegisterTests : IAsyncLifetime
             ExpirationInMinute = 1,
             Secret = "jhjfghjkljnhgyuikjhbjgftuyuhjknbhjgyuj",
         };
-
-        var roles = new List<Role> {
-            new() { Id = Guid.NewGuid(), RoleName = "ADMIN" },
-            new() { Id = Guid.NewGuid(), RoleName = "APPLICANT" },
-            new() { Id = Guid.NewGuid(), RoleName = "EMPLOYEE" }
-            };
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-           .UseInMemoryDatabase(Guid.NewGuid().ToString())
-           .Options;
-        context = new AppDbContext(options);
-        context.Roles.AddRange(roles);
-        await context.SaveChangesAsync();
+        this.inMemoryDb = new InMemoryDb();
         hasher = new PasswordHasher<User>();
         var jwtSetting = Options.Create(setting);
         tokenProvider = new TokenProvider(jwtSetting);
+        var context = inMemoryDb.context;
         unit = new IdentityService(context, tokenProvider, hasher);
-    }
-
-    public async Task DisposeAsync()
-    {
-        await context.Database.EnsureDeletedAsync();
-        await context.DisposeAsync();
     }
 
 
     [Theory]
+    [InlineData("test3@gmail.com", "password1", "test3", "admin")]
     [InlineData("test1@gmail.com", "password1", "test1", "admin")]
     [InlineData("test2@gmail.com", "password1", "test2", "Applicant")]
-    [InlineData("test3@gmail.com", "password1", "test3", "EMPLOYEE")]
     public async Task CreateUser_ReturnsAuthResponseSuccess_When_RoleIsCorrect_EmailIsUnique
     (string email, string password, string name, string roleName)
     {
@@ -100,5 +83,10 @@ public class UserRegisterTests : IAsyncLifetime
         // ASSERT
         Assert.False(response.IsSuccess);
         Assert.Equal(ErrorMessages.Conflict.ToString(), response.Errors.FirstOrDefault());
+    }
+
+    public void Dispose()
+    {
+        inMemoryDb.Dispose();
     }
 }
