@@ -14,8 +14,8 @@ public class GetCvById : IEndpointMarker
             if (!response.IsSuccess)
                 return Results.NotFound(response.Errors);
 
-            CvMapper.MapToCvDto(response.Data, context.Request.Scheme, context.Request.Host.ToString());
-            return Results.Ok(response);
+            var dto = CvMapper.MapToCvDto(response.Data, context.Request.Scheme, context.Request.Host.ToString());
+            return Results.Ok(dto);
         })
         .Produces(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound)

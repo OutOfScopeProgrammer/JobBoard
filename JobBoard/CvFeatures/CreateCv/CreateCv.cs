@@ -24,7 +24,7 @@ public class CreateCv : IEndpointMarker
             else if (response.Errors.FirstOrDefault() == ErrorMessages.Conflict)
                 return Results.Conflict();
             else
-                return Results.InternalServerError();
+                return Results.InternalServerError(response.Errors);
         })
         .Produces(StatusCodes.Status201Created)
         .Produces(StatusCodes.Status400BadRequest)
