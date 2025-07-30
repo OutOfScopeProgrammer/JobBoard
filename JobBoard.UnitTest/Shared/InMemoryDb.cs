@@ -2,7 +2,7 @@ using JobBoard.Domain.Entities;
 using JobBoard.Shared.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace JobBoard.UnitTest.IdentityFeatures.Shared;
+namespace JobBoard.UnitTest.IdentityService.Shared;
 
 public class InMemoryDb : IDisposable
 {

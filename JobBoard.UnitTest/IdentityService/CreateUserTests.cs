@@ -1,19 +1,18 @@
 using JobBoard.Domain.Entities;
-using JobBoard.IdentityFeatures.Services;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Shared.Utilities;
-using JobBoard.UnitTest.IdentityFeatures.Shared;
+using JobBoard.UnitTest.IdentityService.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 
-namespace JobBoard.UnitTest.IdentityFeatures;
+namespace JobBoard.UnitTest.IdentityService;
 
 
 
 public class UserRegisterTests : IDisposable
 {
-    private IdentityService unit;
+    private IdentityFeatures.Services.IdentityService unit;
     private IPasswordHasher<User> hasher = Substitute.For<IPasswordHasher<User>>();
     private TokenProvider tokenProvider;
     private readonly InMemoryDb inMemoryDb;
@@ -32,7 +31,7 @@ public class UserRegisterTests : IDisposable
         var jwtSetting = Options.Create(setting);
         tokenProvider = new TokenProvider(jwtSetting);
         var context = inMemoryDb.context;
-        unit = new IdentityService(context, tokenProvider, hasher);
+        unit = new IdentityFeatures.Services.IdentityService(context, tokenProvider, hasher);
     }
 
 
@@ -43,10 +42,10 @@ public class UserRegisterTests : IDisposable
     public async Task CreateUser_ReturnsAuthResponseSuccess_When_RoleIsCorrect_EmailIsUnique
     (string email, string password, string name, string roleName)
     {
-        // ARRANGE
-        // ACT
+        // Given
+        // When
         var response = await unit.CreateUser(email, name, password, roleName);
-        // ASSERT
+        // Then
         Assert.True(response.IsSuccess);
         Assert.Equal(name, response.Data.UserName);
         Assert.Equal(roleName.ToUpper(), response.Data.Role);
@@ -59,12 +58,12 @@ public class UserRegisterTests : IDisposable
     public async Task CreateUser_ReturnsAuthResponseFailure_When_RoleIsNotCorrect_EmailIsUnique
     (string email, string password, string name, string roleName)
     {
-        // ARRANGE
+        // Given
 
-        // ACT
+        // When
         var response = await unit.CreateUser(email, name, password, roleName);
 
-        // ASSERT
+        // Then
         Assert.False(response.IsSuccess);
         Assert.Equal(ErrorMessages.InvalidRole.ToString(), response.Errors.FirstOrDefault());
     }
@@ -76,11 +75,11 @@ public class UserRegisterTests : IDisposable
     public async Task CreateUser_ReturnsAuthResponseFailure_When_EmailIsNotUnique
     (string email, string password, string name, string roleName)
     {
-        // ARRANGE
+        // Given
         var firstUser = await unit.CreateUser("test1@gmail.com", "s", "password", "Applicant");
-        // ACT
+        // When
         var response = await unit.CreateUser(email, name, password, roleName);
-        // ASSERT
+        // Then
         Assert.False(response.IsSuccess);
         Assert.Equal(ErrorMessages.Conflict.ToString(), response.Errors.FirstOrDefault());
     }

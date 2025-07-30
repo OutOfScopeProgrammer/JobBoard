@@ -1,20 +1,19 @@
 
 using JobBoard.Domain.Entities;
-using JobBoard.IdentityFeatures.Services;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Shared.Utilities;
-using JobBoard.UnitTest.IdentityFeatures.Shared;
+using JobBoard.UnitTest.IdentityService.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace JobBoard.UnitTest.IdentityFeatures;
+namespace JobBoard.UnitTest.IdentityService;
 
 public class LoginTests : IDisposable
 {
     private InMemoryDb inMemoryDb;
     private PasswordHasher<User> hasher;
     private TokenProvider tokenProvider;
-    private IdentityService unit;
+    private IdentityFeatures.Services.IdentityService unit;
 
     public LoginTests()
     {
@@ -30,7 +29,7 @@ public class LoginTests : IDisposable
         var jwtSetting = Options.Create(setting);
         tokenProvider = new TokenProvider(jwtSetting);
         var context = inMemoryDb.context;
-        unit = new IdentityService(context, tokenProvider, hasher);
+        unit = new IdentityFeatures.Services.IdentityService(context, tokenProvider, hasher);
     }
 
     public void Dispose()
@@ -45,7 +44,7 @@ public class LoginTests : IDisposable
     [InlineData("test3@gmail.com", "Correctpassword")]
     public async Task Login_Returns_SuccessWhenUserExistAndPasswordIsCorrect(string email, string password)
     {
-        // ARRANGE
+        // Given
         var user = User.Create(email, "test");
         var role = inMemoryDb.context.Roles.FirstOrDefault(r => r.RoleName == "ADMIN");
         user.SetRole(role!);
@@ -53,9 +52,9 @@ public class LoginTests : IDisposable
         user.SetHashedPassword(hashedPassword);
         inMemoryDb.context.Users.Add(user);
         inMemoryDb.context.SaveChanges();
-        // ACT
+        // When
         var resposne = await unit.Login(email, password);
-        // ASSERT
+        // Then
         Assert.True(resposne.IsSuccess);
         Assert.Equal(user.Name, resposne.Data.UserName);
     }
@@ -67,7 +66,7 @@ public class LoginTests : IDisposable
     [InlineData("test3@gmail.com", "Correctpassword", "")]
     public async Task Login_Returns_FailureWhenUserExistAndPasswordIsNotCorrect(string email, string password, string wrongPassword)
     {
-        // ARRANGE
+        // Given
         var user = User.Create(email, "test");
         var role = inMemoryDb.context.Roles.FirstOrDefault(r => r.RoleName == "ADMIN");
         user.SetRole(role!);
@@ -75,9 +74,9 @@ public class LoginTests : IDisposable
         user.SetHashedPassword(hashedPassword);
         inMemoryDb.context.Users.Add(user);
         inMemoryDb.context.SaveChanges();
-        // ACT
+        // When
         var resposne = await unit.Login(email, password);
-        // ASSERT
+        // Then
         Assert.False(resposne.IsSuccess);
         Assert.Equal(ErrorMessages.Unauthorized, resposne.Errors.FirstOrDefault());
     }
@@ -87,7 +86,7 @@ public class LoginTests : IDisposable
     [InlineData("test3@gmail.com", "Correctpassword", "")]
     public async Task Login_Returns_FailureWhenUserDoesNotExistAndPasswordIsCorrect(string email, string password, string wrongEmail)
     {
-        // ARRANGE
+        // Given
         var user = User.Create(email, "test");
         var role = inMemoryDb.context.Roles.FirstOrDefault(r => r.RoleName == "ADMIN");
         user.SetRole(role!);
@@ -95,9 +94,9 @@ public class LoginTests : IDisposable
         user.SetHashedPassword(hashedPassword);
         inMemoryDb.context.Users.Add(user);
         inMemoryDb.context.SaveChanges();
-        // ACT
+        // When
         var resposne = await unit.Login(wrongEmail, password);
-        // ASSERT
+        // Then
         Assert.False(resposne.IsSuccess);
         Assert.Equal(ErrorMessages.Unauthorized, resposne.Errors.FirstOrDefault());
     }

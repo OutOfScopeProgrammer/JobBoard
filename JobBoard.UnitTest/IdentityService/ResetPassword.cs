@@ -1,19 +1,18 @@
 using JobBoard.Domain.Entities;
-using JobBoard.IdentityFeatures.Services;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Shared.Utilities;
-using JobBoard.UnitTest.IdentityFeatures.Shared;
+using JobBoard.UnitTest.IdentityService.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace JobBoard.UnitTest.IdentityFeatures;
+namespace JobBoard.UnitTest.IdentityService;
 
 public class ResetPassword : IDisposable
 {
     private InMemoryDb inMemoryDb;
     private PasswordHasher<User> hasher;
     private TokenProvider tokenProvider;
-    private IdentityService unit;
+    private IdentityFeatures.Services.IdentityService unit;
     public ResetPassword()
     {
         inMemoryDb = new InMemoryDb();
@@ -27,7 +26,7 @@ public class ResetPassword : IDisposable
         hasher = new PasswordHasher<User>();
         var jwtSetting = Options.Create(setting);
         tokenProvider = new TokenProvider(jwtSetting);
-        unit = new IdentityService(inMemoryDb.context, tokenProvider, hasher);
+        unit = new IdentityFeatures.Services.IdentityService(inMemoryDb.context, tokenProvider, hasher);
     }
 
     public void Dispose()
@@ -46,7 +45,7 @@ public class ResetPassword : IDisposable
     public async Task ResetPassword_Returns_Success_When_UserEmailExistsAndOldPasswordIsCorrect
     (string email, string oldPassword, string newPassword, string userName)
     {
-        // ARRANGE
+        // Given
         var user = User.Create(email, userName);
         var hashedPassword = hasher.HashPassword(user, oldPassword);
         user.SetHashedPassword(hashedPassword);
@@ -54,9 +53,9 @@ public class ResetPassword : IDisposable
         user.SetRole(role!);
         inMemoryDb.context.Users.Add(user);
         inMemoryDb.context.SaveChanges();
-        // ACT
+        // When
         var respons = await unit.ResetPassword(email, oldPassword, newPassword);
-        // ASSERT
+        // Then
 
         Assert.True(respons.IsSuccess);
         Assert.Equal(user.Name, respons.Data.UserName);
@@ -75,7 +74,7 @@ public class ResetPassword : IDisposable
     public async Task ResetPassword_Returns_Failure_When_UserEmailExistsAndOldPasswordIsNotCorrect
     (string email, string wrongPassword, string newPassword, string userName)
     {
-        // ARRANGE
+        // Given
         var user = User.Create(email, userName);
         var hashedPassword = hasher.HashPassword(user, "CorrectPassword");
         user.SetHashedPassword(hashedPassword);
@@ -83,9 +82,9 @@ public class ResetPassword : IDisposable
         user.SetRole(role!);
         inMemoryDb.context.Users.Add(user);
         inMemoryDb.context.SaveChanges();
-        // ACT
+        // When
         var respons = await unit.ResetPassword(email, wrongPassword, newPassword);
-        // ASSERT
+        // Then
         Assert.False(respons.IsSuccess);
         Assert.Equal(ErrorMessages.Unauthorized, respons.Errors.FirstOrDefault());
 
@@ -100,7 +99,7 @@ public class ResetPassword : IDisposable
     public async Task ResetPassword_Returns_Failure_When_UserEmailDoesNotExist
    (string email, string oldPassword, string newPassword, string userName)
     {
-        // ARRANGE
+        // Given
         var user = User.Create("Correct@gmail.com", userName);
         var hashedPassword = hasher.HashPassword(user, oldPassword);
         user.SetHashedPassword(hashedPassword);
@@ -108,9 +107,9 @@ public class ResetPassword : IDisposable
         user.SetRole(role!);
         inMemoryDb.context.Users.Add(user);
         inMemoryDb.context.SaveChanges();
-        // ACT
+        // When
         var respons = await unit.ResetPassword(email, oldPassword, newPassword);
-        // ASSERT
+        // Then
 
         Assert.False(respons.IsSuccess);
         Assert.Equal(ErrorMessages.Unauthorized, respons.Errors.FirstOrDefault());
