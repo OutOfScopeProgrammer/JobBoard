@@ -17,9 +17,7 @@ public class CreateJob : IEndpointMarker
         {
             var userId = AuthHelper.GetUserId(context);
             var response = await jobService.CreateJob(dto.Title, dto.Description, dto.Salary, userId, cancellationToken);
-            if (!response.IsSuccess)
-                return Results.InternalServerError();
-            return Results.Created();
+            return response.IsSuccess ? Results.Created() : Results.InternalServerError(response.Errors);
         })
         .WithTags("Job")
         .WithDescription("ایجاد شغل")
