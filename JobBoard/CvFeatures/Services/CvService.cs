@@ -9,7 +9,7 @@ namespace JobBoard.CvFeatures.Services;
 
 public class CvService(AppDbContext dbContext, ImageProcessor imageProcessor)
 {
-    private readonly string SubFolder = "cvImages";
+    private readonly string _subFolderNam = "cvImages";
 
     public async Task<Response> CreateCv(string fullName, string? fullAddress,
      string city, int expectedSalary, IFormFile image, Guid userId)
@@ -29,7 +29,7 @@ public class CvService(AppDbContext dbContext, ImageProcessor imageProcessor)
         {
             var imageUrl = await imageProcessor
                 .WithImage(image)
-                .InSubFolder(SubFolder)
+                .InSubFolder(_subFolderNam)
                 .Save();
 
             if (!imageUrl.IsSuccess)
