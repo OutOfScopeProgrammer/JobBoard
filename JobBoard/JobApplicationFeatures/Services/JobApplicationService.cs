@@ -16,9 +16,7 @@ public class JobApplicationService(AppDbContext dbContext)
             return Response<Guid>.Failure(ErrorMessages.NotFound);
         var application = Application.Create(description, job.Id, applicantId, Status.Submitted);
         dbContext.Applications.Add(application);
-        if (await dbContext.SaveChangesAsync(cancellationToken) <= 0)
-            return Response<Guid>.Failure(ErrorMessages.Internal);
-
+        await dbContext.SaveChangesAsync(cancellationToken);
         return Response<Guid>.Success(application.Id);
     }
 
@@ -47,8 +45,7 @@ public class JobApplicationService(AppDbContext dbContext)
         if (application is null)
             return Response.Failure(ErrorMessages.NotFound);
         application.ChangeStatus(status);
-        if (await dbContext.SaveChangesAsync(cancellationToken) <= 0)
-            return Response.Failure(ErrorMessages.Internal);
+        await dbContext.SaveChangesAsync(cancellationToken);
         return Response.Success();
     }
 
