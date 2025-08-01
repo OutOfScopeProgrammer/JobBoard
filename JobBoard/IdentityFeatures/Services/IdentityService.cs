@@ -28,9 +28,7 @@ public class IdentityService(AppDbContext dbContext, TokenProvider tokenProvider
         user.SetRole(role);
         dbContext.Add(user);
 
-        if (await dbContext.SaveChangesAsync() <= 0)
-            return Response<AuthResponse>.Failure(ErrorMessages.Internal);
-
+        await dbContext.SaveChangesAsync();
         var token = tokenProvider.GenerateJwt(user);
         return Response<AuthResponse>.Success(new(user.Name, token, user.Role.RoleName));
     }
@@ -61,10 +59,7 @@ public class IdentityService(AppDbContext dbContext, TokenProvider tokenProvider
 
         var newHashedPassword = passwordHasher.HashPassword(user, newPassword);
         user.SetHashedPassword(newHashedPassword);
-
-        if (await dbContext.SaveChangesAsync() <= 0)
-            return Response<AuthResponse>.Failure(ErrorMessages.Internal);
-
+        await dbContext.SaveChangesAsync();
         var token = tokenProvider.GenerateJwt(user);
         return Response<AuthResponse>.Success(new(user.Name, token, user.Role.RoleName));
     }

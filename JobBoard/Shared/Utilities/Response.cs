@@ -17,7 +17,7 @@ public class Response<T>
     /// </summary>
     [MemberNotNullWhen(true, nameof(Data))]
 
-    public bool IsSuccess { get; set; }
+    public bool IsSuccess { get; set; } = false;
     /// <summary>
     /// The data returned if operation was successful;otherwise, null.
     /// </summary>

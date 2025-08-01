@@ -26,18 +26,16 @@ public class JobService(AppDbContext dbContext)
     {
         var job = Job.Create(title, description, userId, salary);
         dbContext.Jobs.Add(job);
-        if (await dbContext.SaveChangesAsync(cancellationToken) <= 0)
-            return Response<Guid>.Failure(ErrorMessages.Internal);
+        await dbContext.SaveChangesAsync(cancellationToken);
         return Response<Guid>.Success(job.Id);
     }
 
-    public async Task<Response> UpdateJob(string? title, string? description, Guid jobId, CancellationToken cancellationToken)
+    public async Task<Response> UpdateJob(string? title, string? description, Guid jobId, Guid employeeId, CancellationToken cancellationToken)
     {
-        var job = await dbContext.Jobs.FirstOrDefaultAsync(j => j.Id == jobId);
+        var job = await dbContext.Jobs.FirstOrDefaultAsync(j => j.Id == jobId & j.EmployeeId == employeeId);
         if (job is null) return Response.Failure(ErrorMessages.NotFound);
         job.UpdateJob(title, description);
-        if (await dbContext.SaveChangesAsync(cancellationToken) <= 0)
-            return Response.Failure(ErrorMessages.Internal);
+        await dbContext.SaveChangesAsync(cancellationToken);
         return Response.Success();
 
     }
