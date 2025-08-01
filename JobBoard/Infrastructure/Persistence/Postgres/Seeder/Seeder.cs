@@ -3,7 +3,7 @@ using JobBoard.Domain.Entities;
 using JobBoard.Infrastructure.Auth;
 using Microsoft.EntityFrameworkCore;
 
-namespace JobBoard.Shared.Persistence.Seeder;
+namespace JobBoard.Shared.Persistence.Postgres.Seeder;
 
 public static class Seeder
 {

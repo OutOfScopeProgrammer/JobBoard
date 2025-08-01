@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace JobBoard.Infrastructure.Persistence.Migrations
+namespace JobBoard.Infrastructure.Persistence.Postgres.Migrations
 {
     /// <inheritdoc />
     public partial class AddIndexForUserEmail : Migration

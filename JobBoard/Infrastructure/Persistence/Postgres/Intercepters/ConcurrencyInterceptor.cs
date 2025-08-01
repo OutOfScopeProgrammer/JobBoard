@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace JobBoard.Infrastructure.Persistence.Intercepters;
+namespace JobBoard.Infrastructure.Persistence.Postgres.Intercepters;
 
 public class ConcurrencyInterceptor : SaveChangesInterceptor
 {

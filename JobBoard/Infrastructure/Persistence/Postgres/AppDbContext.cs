@@ -1,7 +1,7 @@
 using JobBoard.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace JobBoard.Shared.Persistence;
+namespace JobBoard.Shared.Persistence.Postgres;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {

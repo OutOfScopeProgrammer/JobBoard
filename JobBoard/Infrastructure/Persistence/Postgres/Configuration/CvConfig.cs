@@ -1,7 +1,7 @@
 using JobBoard.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace JobBoard.Infrastructure.Persistence.Configuration;
+namespace JobBoard.Infrastructure.Persistence.Postgres.Configuration;
 
 public class CvConfig : IEntityTypeConfiguration<Cv>
 {

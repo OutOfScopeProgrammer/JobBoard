@@ -3,7 +3,7 @@ using JobBoard.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace JobBoard.Infrastructure.Persistence.Configuration;
+namespace JobBoard.Infrastructure.Persistence.Postgres.Configuration;
 
 public class UserConfig : IEntityTypeConfiguration<User>
 {

@@ -1,7 +1,7 @@
 
 using JobBoard.Domain.Entities;
 using JobBoard.Infrastructure.Auth;
-using JobBoard.Shared.Persistence;
+using JobBoard.Shared.Persistence.Postgres;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

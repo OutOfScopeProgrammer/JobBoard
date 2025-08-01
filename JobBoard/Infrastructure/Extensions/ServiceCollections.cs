@@ -8,10 +8,10 @@ using JobBoard.IdentityFeatures.Services;
 using JobBoard.Infrastructure.Auth;
 using JobBoard.Infrastructure.ExceptionHandlers;
 using JobBoard.Infrastructure.Middlewares;
-using JobBoard.Infrastructure.Persistence.Intercepters;
+using JobBoard.Infrastructure.Persistence.Postgres.Intercepters;
 using JobBoard.JobApplicationFeatures.Services;
 using JobBoard.JobFeatures.Services;
-using JobBoard.Shared.Persistence;
+using JobBoard.Shared.Persistence.Postgres;
 using JobBoard.Shared.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -63,6 +63,7 @@ public static class ServiceCollections
             option.EnableSensitiveDataLogging();
             option.AddInterceptors(intercepters);
         });
+
 
     }
 

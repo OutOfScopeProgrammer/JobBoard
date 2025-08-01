@@ -3,7 +3,7 @@ using JobBoard.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace JobBoard.Infrastructure.Persistence.Intercepters;
+namespace JobBoard.Infrastructure.Persistence.Postgres.Intercepters;
 
 public class AuditIntercepter : SaveChangesInterceptor
 {

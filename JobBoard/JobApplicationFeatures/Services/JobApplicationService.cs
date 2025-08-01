@@ -1,6 +1,6 @@
 using JobBoard.Domain.Entities;
 using JobBoard.Domain.Enums;
-using JobBoard.Shared.Persistence;
+using JobBoard.Shared.Persistence.Postgres;
 using JobBoard.Shared.Utilities;
 using Microsoft.EntityFrameworkCore;
 

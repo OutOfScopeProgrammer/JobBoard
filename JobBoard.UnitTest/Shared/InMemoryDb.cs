@@ -1,5 +1,4 @@
 using JobBoard.Domain.Entities;
-using JobBoard.Shared.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace JobBoard.UnitTest.IdentityService.Shared;
